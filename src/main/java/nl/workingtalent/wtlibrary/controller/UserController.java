@@ -59,7 +59,7 @@ public class UserController {
         user.setPhoneNumber(dto.getPhoneNumber());
 
         service.save(user);
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(false, HttpStatus.OK);
     }
     
     @RequestMapping("user/{id}")
