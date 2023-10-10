@@ -1,0 +1,51 @@
+name: Spring Boot CI
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: wt_library
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+  
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew build
+      env:
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_USERNAME: root
+        DB_PASSWORD: password
+    - name: Run Tests
+      run: ./gradlew test
+      # Make sure to set the environment variables for your tests to connect to the MySQL service
+      env:
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_USERNAME: root
+        DB_PASSWORD: password

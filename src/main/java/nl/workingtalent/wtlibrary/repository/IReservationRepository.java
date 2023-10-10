@@ -1,0 +1,8 @@
+package nl.workingtalent.wtlibrary.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import nl.workingtalent.wtlibrary.model.Reservation;
+
+public interface IReservationRepository extends JpaRepository<Reservation, Long> {
+}
