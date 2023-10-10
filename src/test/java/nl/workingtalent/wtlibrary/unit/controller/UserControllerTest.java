@@ -65,6 +65,5 @@ public class UserControllerTest {
         assertTrue(response);
 
         verify(userService, times(1)).delete(userId);
-        assertFalse(true);
     }
 }
