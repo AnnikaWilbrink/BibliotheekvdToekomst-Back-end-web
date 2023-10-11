@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import nl.workingtalent.wtlibrary.dto.BookDto;
+import nl.workingtalent.wtlibrary.dto.BookInfoDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookDto;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.service.BookService;
@@ -58,7 +59,6 @@ public class BookController {
 		book.setAuthor(dto.getAuthor());
 		book.setAvailablity(dto.getAvailablity());
 		book.setCategory(dto.getCategory());
-		book.setDescription(dto.getDescription());
 		book.setEdition(dto.getEdition());
 		book.setCoverUrl(dto.getCoverUrl());
 		book.setEdition(dto.getEdition());
@@ -87,7 +87,6 @@ public class BookController {
 	    existingBook.setAuthor(dto.getAuthor());
 	    existingBook.setAvailablity(dto.getAvailablity());
 	    existingBook.setCategory(dto.getCategory());
-	    existingBook.setDescription(dto.getDescription());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
 		existingBook.setEdition(dto.getEdition());
@@ -103,5 +102,25 @@ public class BookController {
 		return true;
 	}
 	
+	@RequestMapping("book/info/{id}")
+	public Optional<BookInfoDto> findInfoById(@PathVariable long id){
+		Optional<Book> optional = service.findById(id);
+		if(optional.isEmpty()) {
+	        return Optional.empty();
+	    }
+		Book book = optional.get();
+		
+		BookInfoDto dto = new BookInfoDto();
+		
+		dto.setAuthor(book.getAuthor());
+		dto.setCategory(book.getCategory());
+		dto.setCoverUrl(book.getCoverUrl());
+		dto.setIsbn(book.getIsbn());
+		dto.setSubject(book.getSubject());
+		dto.setSummary(book.getSummary());
+		dto.setTitle(book.getTitle());
+		
+		return Optional.of(dto);
+	}
 	
 }

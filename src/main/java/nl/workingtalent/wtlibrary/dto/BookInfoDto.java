@@ -1,8 +1,6 @@
 package nl.workingtalent.wtlibrary.dto;
 
-public class BookDto {
-
-	private long id;
+public class BookInfoDto {
 	
 	private String title;
 	
@@ -13,38 +11,10 @@ public class BookDto {
 	private String summary;
 
 	private String coverUrl;
-
-	private String availablity;
-
-	private String reviews; // dit moet een list zijn toch?
 	
 	private String subject;
 
 	private String category;
-
-	public String getSubject() {
-		return subject;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getTitle() {
 		return title;
@@ -53,11 +23,11 @@ public class BookDto {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	public String getIsbn() {
 		return isbn;
 	}
-	
+
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
@@ -86,21 +56,20 @@ public class BookDto {
 		this.coverUrl = coverUrl;
 	}
 
-	public String getAvailablity() {
-		return availablity;
+	public String getSubject() {
+		return subject;
 	}
 
-	public void setAvailablity(String availablity) {
-		this.availablity = availablity;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
-	public String getReviews() {
-		return reviews;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setReviews(String reviews) {
-		this.reviews = reviews;
+	public void setCategory(String category) {
+		this.category = category;
 	}
-
 	
 }

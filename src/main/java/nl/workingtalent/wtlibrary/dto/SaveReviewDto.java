@@ -2,6 +2,14 @@ package nl.workingtalent.wtlibrary.dto;
 
 public class SaveReviewDto {
 	
+	private long bookId;
+	
+    private long userId;
+    
+    private String text;
+    
+    private int stars;
+	
     public long getBookId() {
 		return bookId;
 	}
@@ -26,8 +34,5 @@ public class SaveReviewDto {
 	public void setStars(int stars) {
 		this.stars = stars;
 	}
-	private long bookId;
-    private long userId;
-    private String text;
-    private int stars;
+	
 }
