@@ -21,6 +21,7 @@ import nl.workingtalent.wtlibrary.dto.LoginResponseDto;
 import nl.workingtalent.wtlibrary.dto.SaveUserDto;
 import nl.workingtalent.wtlibrary.dto.UserChangeEmailDto;
 import nl.workingtalent.wtlibrary.dto.UserChangePasswordDto;
+import nl.workingtalent.wtlibrary.dto.UserChangePhoneNumberDto;
 import nl.workingtalent.wtlibrary.dto.UserDto;
 import nl.workingtalent.wtlibrary.dto.UserLoginDto;
 import nl.workingtalent.wtlibrary.model.User;
@@ -143,7 +144,6 @@ public class UserController {
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "user/changeEmail")
     public ResponseEntity<?> changeEmail(@RequestBody UserChangeEmailDto dto, HttpServletRequest request) {
-        // Fetch the user from the request attributes
         User user = (User) request.getAttribute("WT_USER");
 
         if (user == null) {
@@ -163,11 +163,9 @@ public class UserController {
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "user/changePassword")
 	public ResponseEntity<?> changePassword(@RequestBody UserChangePasswordDto dto, HttpServletRequest request) {
-	    // Fetch the user from the request attributes
 	    User user = (User) request.getAttribute("WT_USER");
 
 	    if (user == null) {
-	        // No user found associated with the token
 	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
 	    }
 
@@ -178,5 +176,24 @@ public class UserController {
 	        return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
 	    }
 	}
+	
+	@RequestMapping(method = RequestMethod.PUT, value = "user/changePhoneNumber")
+	public ResponseEntity<?> changePhoneNumber(@RequestBody UserChangePhoneNumberDto dto, HttpServletRequest request) {
+	    User user = (User) request.getAttribute("WT_USER");
+	    
+	    System.out.println(user); // check
+
+	    if (user == null) {
+	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+	    }
+
+	    boolean success = service.changePhoneNumber(user, dto);
+	    if (success) {
+	        return new ResponseEntity<>(1, HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
+	    }
+	}
+
 
 }
