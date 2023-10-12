@@ -8,8 +8,14 @@ public class ReservationDto {
     
     private LocalDate reservationDate;
 
-
 	private String reservationStatus;
+
+	private String UserFirstName;
+
+	private String UserLastName;
+
+	private String BookTitle;
+
 	public long getId() {
 		return id;
 	}
@@ -33,5 +39,29 @@ public class ReservationDto {
 	public void setReservationStatus(String reservationStatus){
 		this.reservationStatus = reservationStatus;
 	}
+
+    public String getUserFirstName() {
+        return UserFirstName;
+    }
+
+    public void setUserFirstName(String UserFirstName) {
+        this.UserFirstName = UserFirstName;
+    }
+
+    public String getUserLastName() {
+        return UserLastName;
+    }
+
+    public void setUserLastName(String UserLastName) {
+        this.UserLastName = UserLastName;
+    }
+
+    public String getBookTitle() {
+        return BookTitle;
+    }
+
+    public void setBookTitle(String BookTitle) {
+        this.BookTitle = BookTitle;
+    }
 
 }

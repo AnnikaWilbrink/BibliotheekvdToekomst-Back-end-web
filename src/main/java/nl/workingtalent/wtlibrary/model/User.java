@@ -43,6 +43,9 @@ public class User {
     
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Review> reviews;
+
+	@OneToMany(mappedBy = "user")
+	private List<Reservation> reservations;
     
     @Column(length = 100, unique = true)
     private String token;
@@ -134,4 +137,25 @@ public class User {
     public String getFullName() {
     	return this.firstName + " " + this.lastName;
     }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public LocalDateTime getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
 }

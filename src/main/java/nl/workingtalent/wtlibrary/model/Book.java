@@ -45,6 +45,9 @@ public class Book {
     
     @OneToMany(orphanRemoval = true, mappedBy = "book")
     private List<Review> reviews;
+
+	@OneToMany(mappedBy = "book")
+	private List<Reservation> reservations;
     
 	@Column(length = 500, nullable = false)
     private String description;
@@ -145,5 +148,12 @@ public class Book {
 		this.description = description;
 	}
 	
-	
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
 }
