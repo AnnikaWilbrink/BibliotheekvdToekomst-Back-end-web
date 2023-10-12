@@ -22,7 +22,7 @@ public class Book {
     @Column(length = 100, nullable = false)
     private String author;
     
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String isbn;
     
     @Column(length = 50, nullable = false)
@@ -45,9 +45,6 @@ public class Book {
     
     @OneToMany(orphanRemoval = true, mappedBy = "book")
     private List<Review> reviews;
-    
-	@Column(length = 500, nullable = false)
-    private String description;
 
 	public long getId() {
 		return id;
@@ -136,14 +133,5 @@ public class Book {
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
 	
 }

@@ -14,19 +14,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nl.workingtalent.wtlibrary.dto.ReviewDto;
 import nl.workingtalent.wtlibrary.dto.SaveReviewDto;
+import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.Review;
+import nl.workingtalent.wtlibrary.model.User;
+import nl.workingtalent.wtlibrary.service.BookService;
 import nl.workingtalent.wtlibrary.service.ReviewService;
+import nl.workingtalent.wtlibrary.service.UserService;
 
 @RestController
 @CrossOrigin(maxAge=3600)
 public class ReviewController {
     
     @Autowired
-    private ReviewService service;
+    private ReviewService reviewService;
+    
+    @Autowired
+    private BookService bookService;
+    
+    @Autowired
+    private UserService userService;
     
     @RequestMapping("review/all")
     public List<ReviewDto> findAll() {
-        Iterable<Review> reviews = service.findAll();
+        Iterable<Review> reviews = reviewService.findAll();
         List<ReviewDto> dtos = new ArrayList<>();
         
         reviews.forEach(review -> {
@@ -46,18 +56,34 @@ public class ReviewController {
     @RequestMapping(method = RequestMethod.POST, value="review/save")
     public boolean save(@RequestBody SaveReviewDto dto) {
         Review review = new Review();
-        // Populate Book and User with their IDs from the dto.
-        // You might need to fetch these entities from their services first.
+        
+        // Populate Book and User with their IDs from the dto by fetching these entities from their services first.
+        Optional<Book> bookOptional = bookService.findById(dto.getBookId());
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            review.setBook(book);
+        } else {
+            return false;
+        }
+        
+        Optional <User> userOptional = userService.findById(dto.getUserId());
+        if (userOptional.isPresent()) {
+        	User user = userOptional.get();
+        	review.setUser(user);
+        } else {
+        	return false;
+        }
+        
         review.setText(dto.getText());
         review.setStars(dto.getStars());
         
-        service.save(review);
+        reviewService.save(review);
         return true;
     }
     
     @RequestMapping("review/{id}")
     public Optional<ReviewDto> findById(@PathVariable long id) {
-        Optional<Review> optional = service.findById(id);
+        Optional<Review> optional = reviewService.findById(id);
         if(optional.isPresent()) {
             Review review = optional.get();
             ReviewDto dto = new ReviewDto();
@@ -75,7 +101,7 @@ public class ReviewController {
     
     @RequestMapping(method = RequestMethod.PUT, value="review/{id}")
     public boolean update(@PathVariable long id, @RequestBody SaveReviewDto dto) {
-        Optional<Review> optional = service.findById(id);
+        Optional<Review> optional = reviewService.findById(id);
         if(optional.isEmpty()) {
             return false;
         }
@@ -84,7 +110,7 @@ public class ReviewController {
         existingReview.setText(dto.getText());
         existingReview.setStars(dto.getStars());
         
-        service.update(existingReview);
+        reviewService.update(existingReview);
         return true;
     }
 }
