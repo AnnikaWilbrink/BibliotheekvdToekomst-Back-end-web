@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import nl.workingtalent.wtlibrary.dto.BookDto;
 import nl.workingtalent.wtlibrary.dto.BookInfoDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookDto;
+import nl.workingtalent.wtlibrary.dto.SearchBookDto;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.service.BookService;
 
@@ -121,6 +123,11 @@ public class BookController {
 		dto.setTitle(book.getTitle());
 		
 		return Optional.of(dto);
+	}
+	
+	@PostMapping("book/search")
+	public List<Book> search(@RequestBody SearchBookDto dto ) {
+		return service.search(dto.getSearchWord());
 	}
 	
 }
