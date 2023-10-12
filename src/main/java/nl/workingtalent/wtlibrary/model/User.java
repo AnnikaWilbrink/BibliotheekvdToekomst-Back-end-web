@@ -136,6 +136,6 @@ public class User {
     }
     
     public boolean isAdmin() {
-    	return role != null && role.equals("ADMIN");
+    	return role != null && role.equals("admin");
     }
 }
