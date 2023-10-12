@@ -7,7 +7,6 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import nl.workingtalent.wtlibrary.dto.UserLoginDto;
 import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.repository.IUserRepository;
 

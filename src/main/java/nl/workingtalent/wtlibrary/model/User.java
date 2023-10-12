@@ -134,4 +134,8 @@ public class User {
     public String getFullName() {
     	return this.firstName + " " + this.lastName;
     }
+    
+    public boolean isAdmin() {
+    	return role != null && role.equals("ADMIN");
+    }
 }

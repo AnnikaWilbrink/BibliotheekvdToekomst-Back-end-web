@@ -1,15 +1,17 @@
 package nl.workingtalent.wtlibrary.unit.controller;
 
-import nl.workingtalent.wtlibrary.controller.UserController;
-import nl.workingtalent.wtlibrary.dto.SaveUserDto;
-import nl.workingtalent.wtlibrary.service.UserService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+
+import nl.workingtalent.wtlibrary.controller.UserController;
+import nl.workingtalent.wtlibrary.dto.SaveUserDto;
+import nl.workingtalent.wtlibrary.service.UserService;
 
 public class UserControllerTest {
 
@@ -29,7 +31,7 @@ public class UserControllerTest {
         dto.setEmail("test.email@example.com");
         ResponseEntity<Boolean> response = userController.save(dto);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(200, response.getStatusCode().value());
         assertTrue(response.getBody());
     }
 }
