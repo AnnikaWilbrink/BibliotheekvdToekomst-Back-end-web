@@ -41,7 +41,7 @@ public class BookController {
 			bookDto.setCoverUrl(dbBook.getCoverUrl());
 			bookDto.setAvailablity(dbBook.getAvailablity());
 			bookDto.setSubject(dbBook.getSubject());
-			dbBook.setCategory(dbBook.getCategory());
+			bookDto.setCategory(dbBook.getCategory());
 			//bookDto.setReviews(dbBook.getReviews());
 
 			dtos.add(bookDto);
