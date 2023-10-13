@@ -50,6 +50,9 @@ public class Book {
     @OneToMany(orphanRemoval = true, mappedBy = "book")
     private List<Review> reviews;
 
+	@OneToMany(mappedBy = "book")
+	private List<BookCopy> bookcopies;
+
 	public long getId() {
 		return id;
 	}
@@ -137,5 +140,13 @@ public class Book {
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
-	
+
+    public List<BookCopy> getBookcopies() {
+        return bookcopies;
+    }
+
+    public void setBookcopies(List<BookCopy> bookcopies) {
+        this.bookcopies = bookcopies;
+    }
+
 }

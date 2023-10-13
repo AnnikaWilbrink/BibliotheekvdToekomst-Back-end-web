@@ -4,7 +4,7 @@ public class BookCopyDto {
 
     private long id;
     
-    private String available;
+    private boolean available;
     
     private int copyNumber;
 
@@ -16,14 +16,6 @@ public class BookCopyDto {
 		this.id = id;
 	}
 
-	public String getAvailable() {
-		return available;
-	}
-
-	public void setAvailable(String available) {
-		this.available = available;
-	}
-
 	public int getCopyNumber() {
 		return copyNumber;
 	}
@@ -31,5 +23,13 @@ public class BookCopyDto {
 	public void setCopyNumber(int copyNumber) {
 		this.copyNumber = copyNumber;
 	}
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 
 }
