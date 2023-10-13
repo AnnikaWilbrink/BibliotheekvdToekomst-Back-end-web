@@ -47,7 +47,7 @@ public class Book {
     private List<Review> reviews;
 
 	@OneToMany(mappedBy = "book")
-	private List<Reservation> reservations;
+	private List<BookCopy> bookcopies;
     
 	@Column(length = 500, nullable = false)
     private String description;
@@ -147,13 +147,13 @@ public class Book {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-    public List<Reservation> getReservations() {
-        return reservations;
+
+    public List<BookCopy> getBookcopies() {
+        return bookcopies;
     }
 
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
+    public void setBookcopies(List<BookCopy> bookcopies) {
+        this.bookcopies = bookcopies;
     }
 
 }

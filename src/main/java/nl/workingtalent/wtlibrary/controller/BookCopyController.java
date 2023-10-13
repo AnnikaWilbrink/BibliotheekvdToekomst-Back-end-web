@@ -31,7 +31,7 @@ public class BookCopyController {
 	    copies.forEach(copy -> {
 	        BookCopyDto dto = new BookCopyDto();
 	        dto.setId(copy.getId());
-	        dto.setAvailable(copy.getAvailable());
+	        dto.setAvailable(copy.isAvailable());
 	        dto.setCopyNumber(copy.getCopyNumber());
 	        
 	        dtos.add(dto);
@@ -43,7 +43,7 @@ public class BookCopyController {
 	@RequestMapping(method = RequestMethod.POST, value="bookcopy/save")
 	public boolean save(@RequestBody SaveBookCopyDto dto) {
 	    BookCopy bookCopy = new BookCopy();
-	    bookCopy.setAvailable(dto.getAvailable());
+	    bookCopy.setAvailable(dto.isAvailable());
 	    bookCopy.setCopyNumber(dto.getCopyNumber());
 	    
 	    service.save(bookCopy);
@@ -63,7 +63,7 @@ public class BookCopyController {
 	    }
 	    BookCopy existingBookCopy = optional.get();
 	    
-	    existingBookCopy.setAvailable(dto.getAvailable());
+	    existingBookCopy.setAvailable(dto.isAvailable());
 	    existingBookCopy.setCopyNumber(dto.getCopyNumber());
 	    
 	    service.update(existingBookCopy);

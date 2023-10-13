@@ -36,7 +36,7 @@ public class ReservationController {
             dto.setReservationStatus(reservation.getReservationStatus());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
-            dto.setBookTitle(reservation.getBook().getTitle());
+            dto.setBookTitle(reservation.getBookCopy().getBook().getTitle());
             dtos.add(dto);
         });
         
@@ -63,7 +63,7 @@ public class ReservationController {
             dto.setReservationStatus(reservation.getReservationStatus());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
-            dto.setBookTitle(reservation.getBook().getTitle());
+            dto.setBookTitle(reservation.getBookCopy().getBook().getTitle());
             return Optional.of(dto);
         }
         

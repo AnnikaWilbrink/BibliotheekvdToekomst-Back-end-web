@@ -26,7 +26,7 @@ public class Reservation {
 	private User user;
 
 	@ManyToOne
-	private Book book;
+	private BookCopy bookCopy;
 
 	public long getId() {
 		return id;
@@ -60,12 +60,12 @@ public class Reservation {
         this.user = user;
     }
 
-    public Book getBook() {
-        return book;
+    public BookCopy getBookCopy() {
+        return bookCopy;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBookcopy(BookCopy bookCopy) {
+        this.bookCopy = bookCopy;
     }
 
 }

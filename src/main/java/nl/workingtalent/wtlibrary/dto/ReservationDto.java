@@ -16,6 +16,8 @@ public class ReservationDto {
 
 	private String BookTitle;
 
+	private int copyNumber;
+
 	public long getId() {
 		return id;
 	}
@@ -62,6 +64,14 @@ public class ReservationDto {
 
     public void setBookTitle(String BookTitle) {
         this.BookTitle = BookTitle;
+    }
+
+    public int getCopyNumber() {
+        return copyNumber;
+    }
+
+    public void setCopyNumber(int copyNumber) {
+        this.copyNumber = copyNumber;
     }
 
 }
