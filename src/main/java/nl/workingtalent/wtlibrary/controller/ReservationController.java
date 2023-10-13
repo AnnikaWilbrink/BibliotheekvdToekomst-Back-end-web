@@ -33,7 +33,10 @@ public class ReservationController {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
             dto.setReservationDate(reservation.getReservationDate());
-            
+            dto.setReservationStatus(reservation.getReservationStatus());
+            dto.setUserFirstName(reservation.getUser().getFirstName());
+            dto.setUserLastName(reservation.getUser().getLastName());
+            dto.setBookTitle(reservation.getBookCopy().getBook().getTitle());
             dtos.add(dto);
         });
         
@@ -57,7 +60,10 @@ public class ReservationController {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
             dto.setReservationDate(reservation.getReservationDate());
-            
+            dto.setReservationStatus(reservation.getReservationStatus());
+            dto.setUserFirstName(reservation.getUser().getFirstName());
+            dto.setUserLastName(reservation.getUser().getLastName());
+            dto.setBookTitle(reservation.getBookCopy().getBook().getTitle());
             return Optional.of(dto);
         }
         
@@ -71,9 +77,17 @@ public class ReservationController {
             return false;
         }
         Reservation existingReservation = optional.get();
-        existingReservation.setReservationDate(dto.getReservationDate());
-        
+        // existingReservation.setReservationDate(dto.getReservationDate());
+        existingReservation.setReservationStatus(dto.getReservationStatus());
+
+
         service.update(existingReservation);
         return true;
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value="reservation/{id}")
+    public boolean deleteById(@PathVariable long id) {
+    	service.deleteById(id);
+    	return true;
     }
 }
