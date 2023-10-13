@@ -41,6 +41,9 @@ public class User {
     @Column
     private LocalDateTime lastUpdatedDate;
     
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites;
+    
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Review> reviews;
     
