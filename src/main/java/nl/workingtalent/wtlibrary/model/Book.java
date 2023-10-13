@@ -40,8 +40,8 @@ public class Book {
     @Column(length = 300, nullable = false)
     private String coverUrl;
     
-    @Column(length = 50, nullable = false)
-    private String availablity;
+//    @Column(length = 50, nullable = false)
+//    private String availablity;
     
     @OneToMany(orphanRemoval = true, mappedBy = "book")
     private List<Review> reviews;
@@ -121,13 +121,13 @@ public class Book {
 		this.coverUrl = coverUrl;
 	}
 
-	public String getAvailablity() {
-		return availablity;
-	}
-
-	public void setAvailablity(String availablity) {
-		this.availablity = availablity;
-	}
+//	public String getAvailablity() {
+//		return availablity;
+//	}
+//
+//	public void setAvailablity(String availablity) {
+//		this.availablity = availablity;
+//	}
 
 	public List<Review> getReviews() {
 		return reviews;

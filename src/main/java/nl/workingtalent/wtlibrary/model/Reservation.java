@@ -16,10 +16,10 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(nullable = false)
     private LocalDate reservationDate;
 
-	@Column
+	@Column(length = 20, nullable = false)
 	private String reservationStatus;
 
 	@ManyToOne
@@ -64,7 +64,7 @@ public class Reservation {
         return bookCopy;
     }
 
-    public void setBookcopy(BookCopy bookCopy) {
+    public void setBookCopy(BookCopy bookCopy) {
         this.bookCopy = bookCopy;
     }
 

@@ -7,6 +7,10 @@ public class SaveReservationDto {
     private LocalDate reservationDate;
 
 	private String reservationStatus;
+	
+	private long userId;
+	
+	private long bookId;
 
 	public LocalDate getReservationDate() {
 		return reservationDate;
@@ -23,6 +27,22 @@ public class SaveReservationDto {
     public void setReservationStatus(String reservationStatus) {
         this.reservationStatus = reservationStatus;
     }
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public long getBookId() {
+		return bookId;
+	}
+
+	public void setBookId(long bookId) {
+		this.bookId = bookId;
+	}
 
 }
 
