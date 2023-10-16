@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nl.workingtalent.wtlibrary.dto.BookDto;
 import nl.workingtalent.wtlibrary.dto.BookInfoDto;
+import nl.workingtalent.wtlibrary.dto.FilterBookDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookDto;
 import nl.workingtalent.wtlibrary.dto.SearchBookDto;
 import nl.workingtalent.wtlibrary.model.Book;
@@ -128,6 +129,11 @@ public class BookController {
 	@PostMapping("book/search")
 	public List<Book> search(@RequestBody SearchBookDto dto ) {
 		return service.search(dto.getSearchWord());
+	}
+
+	@PostMapping("book/filter")
+	public List<Book> filter(@RequestBody FilterBookDto dto ) {
+		return service.filter(dto.getFilterWord());
 	}
 	
 }

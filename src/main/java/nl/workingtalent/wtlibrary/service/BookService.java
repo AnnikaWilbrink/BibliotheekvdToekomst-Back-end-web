@@ -42,5 +42,9 @@ public class BookService {
 	public List<Book> search(String searchWord) {
 		return repository.findByTitleContainingOrAuthorContainingOrIsbn(searchWord, searchWord, searchWord, Sort.by(Direction.ASC, "title"));
 	}
+
+	public List<Book> filter(String check) {
+		return repository.findByCategoryOrAvailabilityOrReviewsOrSubject(check, check, check, check, Sort.by(Direction.ASC, "title"));
+	}
 	
 }
