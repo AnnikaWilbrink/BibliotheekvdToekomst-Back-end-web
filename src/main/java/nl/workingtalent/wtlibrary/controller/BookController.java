@@ -98,7 +98,8 @@ public class BookController {
 	    service.update(existingBook);
 	    return true;
 	}
-	
+
+	@RequestMapping("book/delete/{id}")
 	public boolean delete(@PathVariable long id) {
 		service.delete(id);
 		return true;
