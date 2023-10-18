@@ -19,8 +19,8 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDate reservationDate;
 
-	@Column(length = 20, nullable = false)
-	private String reservationStatus;
+	@Column(nullable = false)
+	private boolean approved;
 
 	@ManyToOne
 	private User user;
@@ -43,16 +43,16 @@ public class Reservation {
 	public void setReservationDate(LocalDate reservationDate) {
 		this.reservationDate = reservationDate;
 	}
-
-	public void setReservationStatus(String reservationStatus){
-		this.reservationStatus = reservationStatus;
+		
+    public boolean isApproved() {
+		return approved;
 	}
 
-	public String getReservationStatus(){
-		return reservationStatus;
+	public void setApproved(boolean approved) {
+		this.approved = approved;
 	}
 
-    public User getUser() {
+	public User getUser() {
         return user;
     }
 

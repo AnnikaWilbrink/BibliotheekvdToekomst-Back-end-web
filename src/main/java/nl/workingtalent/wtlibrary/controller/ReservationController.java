@@ -45,7 +45,7 @@ public class ReservationController {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
             dto.setReservationDate(reservation.getReservationDate());
-            dto.setReservationStatus(reservation.getReservationStatus());
+            dto.setApproved(reservation.isApproved());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dtos.add(dto);
@@ -74,7 +74,7 @@ public class ReservationController {
         reservation.setBook(book);
         reservation.setUser(user);
         reservation.setReservationDate(dto.getReservationDate());
-        reservation.setReservationStatus(dto.getReservationStatus());
+        reservation.setApproved(dto.isApproved());
         
         service.save(reservation);
         return true;
@@ -88,7 +88,7 @@ public class ReservationController {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
             dto.setReservationDate(reservation.getReservationDate());
-            dto.setReservationStatus(reservation.getReservationStatus());
+            dto.setApproved(reservation.isApproved());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dto.setBookTitle(reservation.getBook().getTitle());
@@ -106,7 +106,7 @@ public class ReservationController {
         }
         Reservation existingReservation = optional.get();
         // existingReservation.setReservationDate(dto.getReservationDate());
-        existingReservation.setReservationStatus(dto.getReservationStatus());
+        existingReservation.setApproved(dto.isApproved());
 
         service.update(existingReservation);
         return true;
