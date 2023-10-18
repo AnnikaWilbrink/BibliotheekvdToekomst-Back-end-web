@@ -1,15 +1,12 @@
 package nl.workingtalent.wtlibrary.dto;
 
-import nl.workingtalent.wtlibrary.model.Book;
-import nl.workingtalent.wtlibrary.model.User;
-
 public class FavoriteDto {
 	
 	private long id;
 
-	private User user;
+	private long userId;
 	
-    private Book book;
+    private long bookId;
 
 	public long getId() {
 		return id;
@@ -19,23 +16,21 @@ public class FavoriteDto {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+	public long getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
-	public Book getBook() {
-		return book;
+	public long getBookId() {
+		return bookId;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
+	public void setBookId(long bookId) {
+		this.bookId = bookId;
 	}
 
-	
-
-    
+	    
 }

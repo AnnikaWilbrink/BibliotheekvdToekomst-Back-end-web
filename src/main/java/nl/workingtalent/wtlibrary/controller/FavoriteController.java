@@ -1,7 +1,9 @@
 package nl.workingtalent.wtlibrary.controller;
 
 import java.util.ArrayList;
+//import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,9 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nl.workingtalent.wtlibrary.dto.FavoriteDto;
+import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.Favorite;
+import nl.workingtalent.wtlibrary.model.User;
+import nl.workingtalent.wtlibrary.service.BookService;
 import nl.workingtalent.wtlibrary.service.FavoriteService;
+import nl.workingtalent.wtlibrary.service.UserService;
 
 
 @RestController
@@ -23,17 +30,24 @@ public class FavoriteController {
 
 	@Autowired
     private FavoriteService service;
+	
+	@Autowired
+    private BookService bookService;
+    
+    @Autowired
+    private UserService userService;
 
-    @GetMapping("favorite/all")
-    public List<FavoriteDto> findAllFavorites() {
-    	List<Favorite> favorites = service.findAll();
+    @GetMapping("favorite/all/{id}")
+    public List<FavoriteDto> findAllFavorites(@PathVariable long id, HttpServletRequest request) {
+
+    	List<Favorite> favorites = service.findAllByUserId(id); //service.findAll();
         List<FavoriteDto> dtos = new ArrayList<>();
         
         favorites.forEach(favorite -> {
         	FavoriteDto dto = new FavoriteDto();
         	dto.setId(favorite.getId());
-        	dto.setUser(favorite.getUser());
-        	dto.setBook(favorite.getBook());
+        	dto.setUserId(favorite.getUser().getId());
+        	dto.setBookId(favorite.getBook().getId());
         	
         	dtos.add(dto);
         });
@@ -47,14 +61,34 @@ public class FavoriteController {
     }
 
     @PostMapping("favorite/save")
-    public boolean save(@RequestBody FavoriteDto dto) {
-    	Favorite favorite = new Favorite();
-    	favorite.setId(dto.getId());
-    	favorite.setUser(dto.getUser());
-    	favorite.setBook(dto.getBook());
+    public boolean save(@RequestBody FavoriteDto dto, HttpServletRequest request) {
+    	User loggedInUser = (User)request.getAttribute("WT_USER");
+    	if (loggedInUser == null) {
+    		return false;
+    	}
     	
-        service.save(favorite);
-        return true;
+    	Optional <User> userOptional = userService.findById(dto.getUserId());
+        if (userOptional.isEmpty()) {
+        	return false;
+        }
+        User user = userOptional.get();
+        
+        Optional<Book> bookOptional = bookService.findById(dto.getBookId());
+        if (bookOptional.isEmpty()) {
+            return false;
+        }
+        Book book = bookOptional.get();
+        
+        if (loggedInUser.getId() == user.getId()) {
+        	Favorite favorite = new Favorite();
+
+        	favorite.setUser(user);
+        	favorite.setBook(book);
+        	
+            service.save(favorite);
+            return true;
+        }
+    	return false;
     }
 
     @DeleteMapping("favorite/{id}")

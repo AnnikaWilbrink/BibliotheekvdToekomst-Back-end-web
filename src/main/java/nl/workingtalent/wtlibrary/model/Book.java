@@ -132,6 +132,14 @@ public class Book {
 	public void setAvailablity(String availablity) {
 		this.availablity = availablity;
 	}
+	
+	public Favorite getFavorite() {
+		return favorite;
+	}
+
+	public void setFavorite(Favorite favorite) {
+		this.favorite = favorite;
+	}
 
 	public List<Review> getReviews() {
 		return reviews;

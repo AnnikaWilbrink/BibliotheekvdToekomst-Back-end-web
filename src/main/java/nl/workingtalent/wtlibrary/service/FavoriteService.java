@@ -23,6 +23,10 @@ public class FavoriteService {
         return repository.findById(id).orElse(null);
     }
     
+    public List<Favorite> findAllByUserId(long userId) {
+    	return repository.findByUserId(userId);
+    }
+    
     public Favorite save(Favorite favorite) {
         return repository.save(favorite);
     }
