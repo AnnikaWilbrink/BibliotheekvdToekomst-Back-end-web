@@ -43,6 +43,9 @@ public class Book {
 //    @Column(length = 50, nullable = false)
 //    private String availablity;
     
+    @OneToMany(mappedBy = "book")
+	private List<Reservation> reservations;
+    
     @OneToMany(orphanRemoval = true, mappedBy = "book")
     private List<Review> reviews;
 
@@ -128,7 +131,15 @@ public class Book {
 //	public void setAvailablity(String availablity) {
 //		this.availablity = availablity;
 //	}
+	
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
 
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+	
 	public List<Review> getReviews() {
 		return reviews;
 	}

@@ -48,7 +48,6 @@ public class ReservationController {
             dto.setReservationStatus(reservation.getReservationStatus());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
-            dto.setBookTitle(reservation.getBookCopy().getBook().getTitle());
             dtos.add(dto);
         });
         
@@ -71,15 +70,8 @@ public class ReservationController {
         }
         Book book = bookOptional.get();
         
-        // Vind een beschikbaar exemplaar (en check of die wel bestaat)
-        Optional<BookCopy> bookCopyOptional = service.availableCopy(book);
-        if (bookCopyOptional.isEmpty()) {
-        	return false;
-        }
-        BookCopy bookCopy = bookCopyOptional.get(); 
-        
         Reservation reservation = new Reservation();
-        reservation.setBookCopy(bookCopy);
+        reservation.setBook(book);
         reservation.setUser(user);
         reservation.setReservationDate(dto.getReservationDate());
         reservation.setReservationStatus(dto.getReservationStatus());
@@ -99,7 +91,7 @@ public class ReservationController {
             dto.setReservationStatus(reservation.getReservationStatus());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
-            dto.setBookTitle(reservation.getBookCopy().getBook().getTitle());
+            dto.setBookTitle(reservation.getBook().getTitle());
             return Optional.of(dto);
         }
         

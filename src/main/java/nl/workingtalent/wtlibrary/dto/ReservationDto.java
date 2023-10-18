@@ -16,7 +16,7 @@ public class ReservationDto {
 
 	private String BookTitle;
 
-	private int copyNumber;
+//	private int copyNumber;
 
 	public long getId() {
 		return id;
@@ -66,12 +66,12 @@ public class ReservationDto {
         this.BookTitle = BookTitle;
     }
 
-    public int getCopyNumber() {
-        return copyNumber;
-    }
-
-    public void setCopyNumber(int copyNumber) {
-        this.copyNumber = copyNumber;
-    }
+//    public int getCopyNumber() {
+//        return copyNumber;
+//    }
+//
+//    public void setCopyNumber(int copyNumber) {
+//        this.copyNumber = copyNumber;
+//    }
 
 }
