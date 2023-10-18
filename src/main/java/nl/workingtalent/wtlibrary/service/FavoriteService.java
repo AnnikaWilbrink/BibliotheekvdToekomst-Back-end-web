@@ -27,6 +27,10 @@ public class FavoriteService {
     	return repository.findByUserId(userId);
     }
     
+    public Favorite findByUserIdAndBookId(long userId, long bookId) {
+        return repository.findByUserIdAndBookId(userId, bookId);
+    }
+    
     public Favorite save(Favorite favorite) {
         return repository.save(favorite);
     }

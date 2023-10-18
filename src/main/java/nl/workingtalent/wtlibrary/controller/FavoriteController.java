@@ -40,7 +40,7 @@ public class FavoriteController {
     @GetMapping("favorite/all/{id}")
     public List<FavoriteDto> findAllFavorites(@PathVariable long id, HttpServletRequest request) {
 
-    	List<Favorite> favorites = service.findAllByUserId(id); //service.findAll();
+    	List<Favorite> favorites = service.findAllByUserId(id);
         List<FavoriteDto> dtos = new ArrayList<>();
         
         favorites.forEach(favorite -> {
@@ -91,9 +91,17 @@ public class FavoriteController {
     	return false;
     }
 
-    @DeleteMapping("favorite/{id}")
-    public void delete(@PathVariable long id) {
-        service.delete(id);
+    @DeleteMapping("favorite/delete")
+    public void delete(@RequestBody FavoriteDto dto, HttpServletRequest request) {
+    	Optional <User> userOptional = userService.findById(dto.getUserId());
+    	User user = userOptional.get();
+    	
+    	Optional<Book> bookOptional = bookService.findById(dto.getBookId());
+    	Book book = bookOptional.get();
+    	
+    	Favorite favorite = service.findByUserIdAndBookId(user.getId(), book.getId());
+    	
+        service.delete(favorite.getId());
     }
 	
 }

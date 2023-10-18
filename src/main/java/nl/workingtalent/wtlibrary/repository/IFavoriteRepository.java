@@ -12,5 +12,6 @@ import nl.workingtalent.wtlibrary.model.Favorite;
 public interface IFavoriteRepository extends JpaRepository<Favorite, Long> {
 	
     List<Favorite> findByUserId(Long userId);
+    Favorite findByUserIdAndBookId(Long userId, Long bookId);
     
 }
