@@ -9,6 +9,8 @@ public class ReservationDto {
     private LocalDate reservationDate;
 
 	private boolean approved;
+	
+	private boolean deleted;
 
 	private String UserFirstName;
 
@@ -30,6 +32,14 @@ public class ReservationDto {
 
 	public void setApproved(boolean approved) {
 		this.approved = approved;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public LocalDate getReservationDate() {

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import nl.workingtalent.wtlibrary.dto.ReservationDto;
 import nl.workingtalent.wtlibrary.dto.SaveReservationDto;
 import nl.workingtalent.wtlibrary.model.Book;
-import nl.workingtalent.wtlibrary.model.BookCopy;
 import nl.workingtalent.wtlibrary.model.Reservation;
 import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.service.BookService;
@@ -46,6 +45,7 @@ public class ReservationController {
             dto.setId(reservation.getId());
             dto.setReservationDate(reservation.getReservationDate());
             dto.setApproved(reservation.isApproved());
+            dto.setDeleted(reservation.isDeleted());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dtos.add(dto);
@@ -75,6 +75,7 @@ public class ReservationController {
         reservation.setUser(user);
         reservation.setReservationDate(dto.getReservationDate());
         reservation.setApproved(dto.isApproved());
+        reservation.setDeleted(false);
         
         service.save(reservation);
         return true;
@@ -89,6 +90,7 @@ public class ReservationController {
             dto.setId(reservation.getId());
             dto.setReservationDate(reservation.getReservationDate());
             dto.setApproved(reservation.isApproved());
+            dto.setDeleted(reservation.isDeleted());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dto.setBookTitle(reservation.getBook().getTitle());

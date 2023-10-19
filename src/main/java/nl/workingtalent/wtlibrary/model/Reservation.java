@@ -21,6 +21,9 @@ public class Reservation {
 
 	@Column(nullable = false)
 	private boolean approved;
+	
+	@Column(nullable = false)
+	private boolean deleted;
 
 	@ManyToOne
 	private User user;
@@ -50,6 +53,14 @@ public class Reservation {
 
 	public void setApproved(boolean approved) {
 		this.approved = approved;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public User getUser() {
