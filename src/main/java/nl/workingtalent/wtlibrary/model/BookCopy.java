@@ -6,8 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import java.util.List;
 
 @Entity
 public class BookCopy {
@@ -24,9 +22,6 @@ public class BookCopy {
 
 	@ManyToOne
 	private Book book;
-
-	@OneToMany(mappedBy = "bookCopy")
-	private List<Reservation> reservations;
 
 	public long getId() {
 		return id;
@@ -50,14 +45,6 @@ public class BookCopy {
 
     public void setBook(Book book) {
         this.book = book;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
     }
 
     public boolean isAvailable() {
