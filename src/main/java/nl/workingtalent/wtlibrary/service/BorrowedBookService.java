@@ -37,4 +37,22 @@ public class BorrowedBookService {
 		repository.save(BorrowBookHistory);
 	}
 	
+	// TODO: verander deze functie
+//	public Optional<BookCopy> availableCopy(Book book) {
+//
+//		List<BookCopy> bookCopies = book.getBookcopies();
+//
+//		// Check of dit boek exemplaren heeft
+//		if (bookCopies.isEmpty()) {
+//			return Optional.empty();
+//		}
+//		// Zoek een exemplaar dat beschikbaar is
+//		for (BookCopy bookCopy : bookCopies) {
+//			if (bookCopy.isAvailable()) {
+//				return Optional.of(bookCopy);
+//			}
+//		}
+//		return Optional.empty();
+//	}
+
 }
