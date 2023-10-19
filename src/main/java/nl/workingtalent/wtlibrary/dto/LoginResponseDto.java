@@ -3,15 +3,15 @@ package nl.workingtalent.wtlibrary.dto;
 public class LoginResponseDto {
 
 	private boolean success;
-	
+
 	private String token;
-	
+
 	private String name;
-	
+
 	private String role;
-	
+
 	private long userId;
-	
+
 	public LoginResponseDto(boolean success) {
 		super();
 		this.success = success;
@@ -57,13 +57,13 @@ public class LoginResponseDto {
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
-	
+
 	public String getRole() {
 		return role;
 	}
-	
+
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
+
 }
