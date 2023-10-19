@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Book {
@@ -40,8 +41,14 @@ public class Book {
     @Column(length = 300, nullable = false)
     private String coverUrl;
     
-    @Column(length = 50, nullable = false)
-    private String availablity;
+//    @Column(length = 50, nullable = false)
+//    private String availablity;
+    
+    @OneToMany(mappedBy = "book")
+	private List<Reservation> reservations;
+    
+    @OneToOne(mappedBy = "book")
+    private Favorite favorite;
     
     @OneToMany(orphanRemoval = true, mappedBy = "book")
     private List<Review> reviews;
@@ -121,12 +128,28 @@ public class Book {
 		this.coverUrl = coverUrl;
 	}
 
-	public String getAvailablity() {
-		return availablity;
+//	public String getAvailablity() {
+//		return availablity;
+//	}
+//
+//	public void setAvailablity(String availablity) {
+//		this.availablity = availablity;
+//	}
+	
+	public List<Reservation> getReservations() {
+		return reservations;
 	}
 
-	public void setAvailablity(String availablity) {
-		this.availablity = availablity;
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+	
+	public Favorite getFavorite() {
+		return favorite;
+	}
+
+	public void setFavorite(Favorite favorite) {
+		this.favorite = favorite;
 	}
 
 	public List<Review> getReviews() {

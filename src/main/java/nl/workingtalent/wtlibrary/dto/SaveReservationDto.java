@@ -6,7 +6,11 @@ public class SaveReservationDto {
     
     private LocalDate reservationDate;
 
-	private String reservationStatus;
+	private boolean approved;
+	
+	private long userId;
+	
+	private long bookId;
 
 	public LocalDate getReservationDate() {
 		return reservationDate;
@@ -16,13 +20,29 @@ public class SaveReservationDto {
 		this.reservationDate = reservationDate;
 	}
 
-    public String getReservationStatus() {
-        return reservationStatus;
-    }
+	public boolean isApproved() {
+		return approved;
+	}
 
-    public void setReservationStatus(String reservationStatus) {
-        this.reservationStatus = reservationStatus;
-    }
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public long getBookId() {
+		return bookId;
+	}
+
+	public void setBookId(long bookId) {
+		this.bookId = bookId;
+	}
 
 }
 

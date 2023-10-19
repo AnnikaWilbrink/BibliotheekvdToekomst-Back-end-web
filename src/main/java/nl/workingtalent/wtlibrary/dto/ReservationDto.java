@@ -8,15 +8,15 @@ public class ReservationDto {
     
     private LocalDate reservationDate;
 
-	private String reservationStatus;
+	private boolean approved;
+	
+	private boolean deleted;
 
 	private String UserFirstName;
 
 	private String UserLastName;
 
 	private String BookTitle;
-
-	private int copyNumber;
 
 	public long getId() {
 		return id;
@@ -26,8 +26,20 @@ public class ReservationDto {
 		this.id = id;
 	}
 
-	public String getReservationStatus(){
-		return reservationStatus;
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public LocalDate getReservationDate() {
@@ -36,10 +48,6 @@ public class ReservationDto {
 
 	public void setReservationDate(LocalDate reservationDate) {
 		this.reservationDate = reservationDate;
-	}
-
-	public void setReservationStatus(String reservationStatus){
-		this.reservationStatus = reservationStatus;
 	}
 
     public String getUserFirstName() {
@@ -64,14 +72,6 @@ public class ReservationDto {
 
     public void setBookTitle(String BookTitle) {
         this.BookTitle = BookTitle;
-    }
-
-    public int getCopyNumber() {
-        return copyNumber;
-    }
-
-    public void setCopyNumber(int copyNumber) {
-        this.copyNumber = copyNumber;
     }
 
 }

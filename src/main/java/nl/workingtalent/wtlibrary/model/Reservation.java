@@ -16,17 +16,20 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(nullable = false)
     private LocalDate reservationDate;
 
-	@Column
-	private String reservationStatus;
+	@Column(nullable = false)
+	private boolean approved;
+	
+	@Column(nullable = false)
+	private boolean deleted;
 
 	@ManyToOne
 	private User user;
 
 	@ManyToOne
-	private BookCopy bookCopy;
+	private Book book;
 
 	public long getId() {
 		return id;
@@ -43,16 +46,24 @@ public class Reservation {
 	public void setReservationDate(LocalDate reservationDate) {
 		this.reservationDate = reservationDate;
 	}
-
-	public void setReservationStatus(String reservationStatus){
-		this.reservationStatus = reservationStatus;
+		
+    public boolean isApproved() {
+		return approved;
 	}
 
-	public String getReservationStatus(){
-		return reservationStatus;
+	public void setApproved(boolean approved) {
+		this.approved = approved;
 	}
 
-    public User getUser() {
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public User getUser() {
         return user;
     }
 
@@ -60,12 +71,12 @@ public class Reservation {
         this.user = user;
     }
 
-    public BookCopy getBookCopy() {
-        return bookCopy;
-    }
+	public Book getBook() {
+		return book;
+	}
 
-    public void setBookcopy(BookCopy bookCopy) {
-        this.bookCopy = bookCopy;
-    }
+	public void setBook(Book book) {
+		this.book = book;
+	}
 
 }

@@ -1,18 +1,9 @@
 package nl.workingtalent.wtlibrary.dto;
 
 public class UserChangePasswordDto {
-    //private String token;
-    private String currentPassword;
+	private String currentPassword;
     private String newPassword;
-
-//    public String getToken() {
-//        return token;
-//    }
-
-//    public void setToken(String token) {
-//        this.token = token;
-//    }
-
+    
     public String getCurrentPassword() {
         return currentPassword;
     }

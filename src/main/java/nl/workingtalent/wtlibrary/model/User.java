@@ -41,7 +41,10 @@ public class User {
     @Column
     private LocalDateTime lastUpdatedDate;
     
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Review> reviews;
 
 	@OneToMany(mappedBy = "user")
@@ -104,6 +107,14 @@ public class User {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	
+	public List<Favorite> getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(List<Favorite> favorites) {
+		this.favorites = favorites;
 	}
 
 	public List<Review> getReviews() {
