@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import nl.workingtalent.wtlibrary.dto.UserChangeEmailDto;
-import nl.workingtalent.wtlibrary.dto.UserChangePasswordDto;
 import nl.workingtalent.wtlibrary.dto.UserChangePhoneNumberDto;
 import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.repository.IUserRepository;
@@ -70,17 +69,17 @@ public class UserService {
 	}
 
 	
-	public boolean changePassword(User user, UserChangePasswordDto dto) {
+	public boolean changePassword(User user, String currentPassword, String newPassword) {
 
 		if (user == null) {
 			return false;
 		}
 
-		if (!user.getPassword().equals(dto.getCurrentPassword())) {
+		if (!user.getPassword().equals(currentPassword)) {
 			return false;
 		}
 
-		user.setPassword(dto.getNewPassword());
+		user.setPassword(newPassword);
 		repository.save(user);
 		return true;
 	}

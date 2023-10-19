@@ -169,7 +169,7 @@ public class UserController {
 	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
 	    }
 
-	    boolean success = service.changePassword(user, dto);
+	    boolean success = service.changePassword(user, dto.getCurrentPassword(), dto.getNewPassword());
 	    if (success) {
 	        return new ResponseEntity<>(1, HttpStatus.OK);
 	    } else {
