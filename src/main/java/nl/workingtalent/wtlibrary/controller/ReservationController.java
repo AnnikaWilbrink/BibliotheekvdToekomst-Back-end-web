@@ -46,8 +46,10 @@ public class ReservationController {
             dto.setReservationDate(reservation.getReservationDate());
             dto.setApproved(reservation.isApproved());
             dto.setDeleted(reservation.isDeleted());
+            dto.setBorrowed(reservation.isBorrowed());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
+            dto.setBookTitle(reservation.getBook().getTitle());
             dtos.add(dto);
         });
         
@@ -76,7 +78,7 @@ public class ReservationController {
         reservation.setReservationDate(dto.getReservationDate());
         reservation.setApproved(dto.isApproved());
         reservation.setDeleted(false);
-        
+        reservation.setBorrowed(false);
         service.save(reservation);
         return true;
     }
@@ -91,6 +93,7 @@ public class ReservationController {
             dto.setReservationDate(reservation.getReservationDate());
             dto.setApproved(reservation.isApproved());
             dto.setDeleted(reservation.isDeleted());
+            dto.setBorrowed(reservation.isBorrowed());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dto.setBookTitle(reservation.getBook().getTitle());
@@ -109,7 +112,8 @@ public class ReservationController {
         Reservation existingReservation = optional.get();
         // existingReservation.setReservationDate(dto.getReservationDate());
         existingReservation.setApproved(dto.isApproved());
-
+        existingReservation.setDeleted(dto.isDeleted());
+        existingReservation.setBorrowed(dto.isBorrowed());
         service.update(existingReservation);
         return true;
     }

@@ -12,6 +12,8 @@ public class ReservationDto {
 	
 	private boolean deleted;
 
+	private boolean borrowed;
+
 	private String UserFirstName;
 
 	private String UserLastName;
@@ -72,6 +74,14 @@ public class ReservationDto {
 
     public void setBookTitle(String BookTitle) {
         this.BookTitle = BookTitle;
+    }
+
+    public boolean isBorrowed() {
+        return borrowed;
+    }
+
+    public void setBorrowed(boolean borrowed) {
+        this.borrowed = borrowed;
     }
 
 }

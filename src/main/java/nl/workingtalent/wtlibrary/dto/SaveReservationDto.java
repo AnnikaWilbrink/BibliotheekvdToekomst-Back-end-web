@@ -7,6 +7,10 @@ public class SaveReservationDto {
     private LocalDate reservationDate;
 
 	private boolean approved;
+
+	private boolean deleted;
+
+	private boolean borrowed;
 	
 	private long userId;
 	
@@ -43,6 +47,22 @@ public class SaveReservationDto {
 	public void setBookId(long bookId) {
 		this.bookId = bookId;
 	}
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isBorrowed() {
+        return borrowed;
+    }
+
+    public void setBorrowed(boolean borrowed) {
+        this.borrowed = borrowed;
+    }
 
 }
 
