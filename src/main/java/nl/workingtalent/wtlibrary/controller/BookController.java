@@ -3,9 +3,11 @@ package nl.workingtalent.wtlibrary.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import nl.workingtalent.wtlibrary.dto.BookAvailabilityDto;
 import nl.workingtalent.wtlibrary.dto.BookDto;
 import nl.workingtalent.wtlibrary.dto.BookInfoDto;
+import nl.workingtalent.wtlibrary.dto.FilterBookDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookDto;
-import nl.workingtalent.wtlibrary.dto.SearchBookDto;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.service.BookService;
 
@@ -41,7 +44,7 @@ public class BookController {
 			bookDto.setAuthor(dbBook.getAuthor());
 			bookDto.setSummary(dbBook.getSummary());
 			bookDto.setCoverUrl(dbBook.getCoverUrl());
-			bookDto.setAvailablity(dbBook.getAvailablity());
+//			bookDto.setAvailablity(dbBook.getAvailablity());
 			bookDto.setSubject(dbBook.getSubject());
 			bookDto.setCategory(dbBook.getCategory());
 			//bookDto.setReviews(dbBook.getReviews());
@@ -59,7 +62,7 @@ public class BookController {
 		book.setTitle(dto.getTitle());
 		book.setIsbn(dto.getIsbn());
 		book.setAuthor(dto.getAuthor());
-		book.setAvailablity(dto.getAvailablity());
+//		book.setAvailablity(dto.getAvailablity());
 		book.setCategory(dto.getCategory());
 		book.setEdition(dto.getEdition());
 		book.setCoverUrl(dto.getCoverUrl());
@@ -87,7 +90,7 @@ public class BookController {
 	    existingBook.setTitle(dto.getTitle());
 	    existingBook.setIsbn(dto.getIsbn());
 	    existingBook.setAuthor(dto.getAuthor());
-	    existingBook.setAvailablity(dto.getAvailablity());
+//	    existingBook.setAvailablity(dto.getAvailablity());
 	    existingBook.setCategory(dto.getCategory());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
@@ -125,9 +128,45 @@ public class BookController {
 		return Optional.of(dto);
 	}
 	
-	@PostMapping("book/search")
-	public List<Book> search(@RequestBody SearchBookDto dto ) {
-		return service.search(dto.getSearchWord());
+//	@PostMapping("book/search")
+//	public List<Book> search(@RequestBody SearchBookDto dto ) {
+//		return service.search(dto.getSearchWord());
+//	}
+
+	@PostMapping("book/filter")
+	public List<BookDto> filter(@RequestBody FilterBookDto dto ) {
+		List<Book> books = service.filter(dto.getFilterWord(), dto.getCategories(), dto.getMinReviewScore());
+		
+		return books.stream().map(book -> {
+			BookDto bookDto = new BookDto();
+			
+			bookDto.setAuthor(book.getAuthor());
+			bookDto.setAvailablity(book.getAvailablity());
+			bookDto.setCategory(book.getCategory());
+			bookDto.setCoverUrl(book.getCoverUrl());
+			bookDto.setId(book.getId());
+			bookDto.setIsbn(book.getIsbn());
+			bookDto.setSubject(book.getSubject());
+			bookDto.setSummary(book.getSummary());
+			bookDto.setTitle(book.getTitle());
+			
+			return bookDto;
+		}).collect(Collectors.toList());
 	}
 	
+	@GetMapping("book/availability/{id}")
+	public BookAvailabilityDto findAvailability(@PathVariable long id) {
+		BookAvailabilityDto dto = new BookAvailabilityDto();
+		
+		Optional<Book> optional = service.findById(id);
+		if(optional.isEmpty()) {
+	        return dto;
+	    }
+		Book book = optional.get();
+		
+		dto.setNumberOfCopies(service.findNrOfCopies(book));
+		dto.setNumberOfAvailableCopies(service.findNrOfAvailableCopies(book));
+		
+		return dto;
+	}
 }

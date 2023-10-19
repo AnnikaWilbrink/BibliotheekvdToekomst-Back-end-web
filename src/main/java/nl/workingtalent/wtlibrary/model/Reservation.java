@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Reservation {
@@ -15,11 +16,20 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(nullable = false)
     private LocalDate reservationDate;
 
-	@Column
-	private String reservationStatus;
+	@Column(nullable = false)
+	private boolean approved;
+	
+	@Column(nullable = false)
+	private boolean deleted;
+
+	@ManyToOne
+	private User user;
+
+	@ManyToOne
+	private Book book;
 
 	public long getId() {
 		return id;
@@ -36,13 +46,37 @@ public class Reservation {
 	public void setReservationDate(LocalDate reservationDate) {
 		this.reservationDate = reservationDate;
 	}
-
-	public void setReservationStatus(String reservationStatus){
-		this.reservationStatus = reservationStatus;
+		
+    public boolean isApproved() {
+		return approved;
 	}
 
-	public String getReservationStatus(){
-		return reservationStatus;
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
 	}
 
 }
