@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import nl.workingtalent.wtlibrary.model.Reservation;
 import nl.workingtalent.wtlibrary.repository.IReservationRepository;
 
-
 @Service
 public class ReservationService {
 

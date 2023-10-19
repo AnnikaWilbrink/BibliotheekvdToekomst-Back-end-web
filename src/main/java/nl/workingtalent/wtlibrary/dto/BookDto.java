@@ -16,7 +16,7 @@ public class BookDto {
 
 //	private String availablity;
 
-	private String reviews; // dit moet een list zijn toch?
+	private String reviews; // TODO: dit moet een list zijn toch?
 	
 	private String subject;
 
