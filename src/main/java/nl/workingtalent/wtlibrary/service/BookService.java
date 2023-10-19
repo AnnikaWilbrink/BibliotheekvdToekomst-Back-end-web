@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import nl.workingtalent.wtlibrary.model.Book;
+import nl.workingtalent.wtlibrary.repository.BookSearchRepository;
 import nl.workingtalent.wtlibrary.repository.IBookRepository;
 
 
@@ -18,6 +17,9 @@ public class BookService {
 
 	@Autowired 
 	private IBookRepository repository;
+	
+	@Autowired
+	private BookSearchRepository searchRepository;
 	
 	public List<Book> findAll(){
 		return repository.findAll();
@@ -39,12 +41,12 @@ public class BookService {
 		repository.save(book);
 	}
 	
-	public List<Book> search(String searchWord) {
-		return repository.findByTitleContainingOrAuthorContainingOrIsbn(searchWord, searchWord, searchWord, Sort.by(Direction.ASC, "title"));
-	}
+//	public List<Book> search(String searchWord) {
+//		return repository.findByTitleContainingOrAuthorContainingOrIsbn(searchWord, searchWord, searchWord, Sort.by(Direction.ASC, "title"));
+//	}
 
-	public List<Book> filter(String check) {
-		return repository.findByCategoryOrAvailabilityOrReviewsOrSubject(check, check, check, check, Sort.by(Direction.ASC, "title"));
+	public List<Book> filter(String filterWord, List<String> categories, Integer minReviewScore) {
+		return searchRepository.search(filterWord, categories, minReviewScore);
 	}
 	
 }
