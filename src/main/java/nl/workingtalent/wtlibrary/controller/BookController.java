@@ -141,7 +141,7 @@ public class BookController {
 			BookDto bookDto = new BookDto();
 			
 			bookDto.setAuthor(book.getAuthor());
-			bookDto.setAvailablity(book.getAvailablity());
+			//bookDto.setAvailablity(book.getAvailablity());
 			bookDto.setCategory(book.getCategory());
 			bookDto.setCoverUrl(book.getCoverUrl());
 			bookDto.setId(book.getId());

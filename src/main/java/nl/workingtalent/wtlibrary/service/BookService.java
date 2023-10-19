@@ -42,8 +42,8 @@ public class BookService {
 		repository.save(book);
 	}
 	
-	public List<Book> search(String searchWord) {
-		return repository.findByTitleContainingOrAuthorContainingOrIsbn(searchWord, searchWord, searchWord, Sort.by(Direction.ASC, "title"));
+	public List<Book> filter(String filterWord, List<String> categories, Integer minReviewScore) {
+		return searchRepository.search(filterWord, categories, minReviewScore);
 	}
 	
 	public int findNrOfCopies(Book book) {

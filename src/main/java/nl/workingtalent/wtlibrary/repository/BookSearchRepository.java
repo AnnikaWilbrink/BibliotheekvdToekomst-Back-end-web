@@ -45,6 +45,7 @@ public class BookSearchRepository {
 
         	predicates.add(in);
         }
+		
 
         if (minReviewScore != null) {
         	Join<Book, Review> bookReviewsJoin = book.join("reviews");
