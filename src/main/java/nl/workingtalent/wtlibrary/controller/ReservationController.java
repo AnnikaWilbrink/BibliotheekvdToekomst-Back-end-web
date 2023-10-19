@@ -1,12 +1,13 @@
 package nl.workingtalent.wtlibrary.controller;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,8 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nl.workingtalent.wtlibrary.dto.ReservationDto;
 import nl.workingtalent.wtlibrary.dto.SaveReservationDto;
+import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.Reservation;
+import nl.workingtalent.wtlibrary.model.User;
+import nl.workingtalent.wtlibrary.service.BookService;
 import nl.workingtalent.wtlibrary.service.ReservationService;
+import nl.workingtalent.wtlibrary.service.UserService;
 
 @RestController
 @CrossOrigin(maxAge=3600)
@@ -23,6 +28,12 @@ public class ReservationController {
     
     @Autowired
     private ReservationService service;
+    
+    @Autowired
+    private BookService bookService;
+    
+    @Autowired
+    private UserService userService;
     
     @RequestMapping("reservation/all")
     public List<ReservationDto> findAllReservations() {
@@ -33,18 +44,39 @@ public class ReservationController {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
             dto.setReservationDate(reservation.getReservationDate());
-            
+            dto.setApproved(reservation.isApproved());
+            dto.setDeleted(reservation.isDeleted());
+            dto.setUserFirstName(reservation.getUser().getFirstName());
+            dto.setUserLastName(reservation.getUser().getLastName());
             dtos.add(dto);
         });
         
         return dtos;
     }
     
-    @RequestMapping(method = RequestMethod.POST, value="reservation/save")
+    @PostMapping(value="reservation/save")
     public boolean save(@RequestBody SaveReservationDto dto) {
+        // ToDo: authorization maken met httpservlet
+    	
+        Optional<User> userOptional = userService.findById(dto.getUserId());
+        if (userOptional.isEmpty()) {
+        	return false;
+        }
+        User user = userOptional.get();
+        
+        Optional<Book> bookOptional = bookService.findById(dto.getBookId());
+        if (bookOptional.isEmpty()) {
+            return false;
+        }
+        Book book = bookOptional.get();
+        
         Reservation reservation = new Reservation();
+        reservation.setBook(book);
+        reservation.setUser(user);
         reservation.setReservationDate(dto.getReservationDate());
-        reservation.setReservationStatus(dto.getReservationStatus());
+        reservation.setApproved(dto.isApproved());
+        reservation.setDeleted(false);
+        
         service.save(reservation);
         return true;
     }
@@ -57,7 +89,11 @@ public class ReservationController {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
             dto.setReservationDate(reservation.getReservationDate());
-            
+            dto.setApproved(reservation.isApproved());
+            dto.setDeleted(reservation.isDeleted());
+            dto.setUserFirstName(reservation.getUser().getFirstName());
+            dto.setUserLastName(reservation.getUser().getLastName());
+            dto.setBookTitle(reservation.getBook().getTitle());
             return Optional.of(dto);
         }
         
@@ -71,9 +107,16 @@ public class ReservationController {
             return false;
         }
         Reservation existingReservation = optional.get();
-        existingReservation.setReservationDate(dto.getReservationDate());
-        
+        // existingReservation.setReservationDate(dto.getReservationDate());
+        existingReservation.setApproved(dto.isApproved());
+
         service.update(existingReservation);
         return true;
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value="reservation/{id}")
+    public boolean deleteById(@PathVariable long id) {
+    	service.deleteById(id);
+    	return true;
     }
 }

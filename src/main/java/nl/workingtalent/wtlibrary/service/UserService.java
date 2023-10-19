@@ -7,6 +7,8 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import nl.workingtalent.wtlibrary.dto.UserChangeEmailDto;
+import nl.workingtalent.wtlibrary.dto.UserChangePhoneNumberDto;
 import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.repository.IUserRepository;
 
@@ -66,4 +68,49 @@ public class UserService {
 	      .toString();
 	}
 
+	
+	public boolean changePassword(User user, String currentPassword, String newPassword) {
+
+		if (user == null) {
+			return false;
+		}
+
+		if (!user.getPassword().equals(currentPassword)) {
+			return false;
+		}
+
+		user.setPassword(newPassword);
+		repository.save(user);
+		return true;
+	}
+	
+	public boolean changeEmail(User user, UserChangeEmailDto dto) {
+		
+		if (user == null) {
+			return false;
+		}
+		
+		if(!user.getEmail().equals(dto.getCurrentEmail())) {
+			return false;
+		}
+		
+		user.setEmail(dto.getNewEmail());
+		repository.save(user);
+		return true;
+	}
+	
+	public boolean changePhoneNumber(User user, UserChangePhoneNumberDto dto) {
+
+		if (user == null) {
+			return false;
+		}
+
+		if (!user.getPhoneNumber().equals(dto.getCurrentPhoneNumber())) {
+			return false;
+		}
+
+		user.setPhoneNumber(dto.getNewPhoneNumber());
+		repository.save(user);
+		return true;
+	}
 }

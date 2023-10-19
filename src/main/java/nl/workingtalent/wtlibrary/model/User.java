@@ -41,8 +41,14 @@ public class User {
     @Column
     private LocalDateTime lastUpdatedDate;
     
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Review> reviews;
+
+	@OneToMany(mappedBy = "user")
+	private List<Reservation> reservations;
     
     @Column(length = 100, unique = true)
     private String token;
@@ -102,6 +108,14 @@ public class User {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	
+	public List<Favorite> getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(List<Favorite> favorites) {
+		this.favorites = favorites;
+	}
 
 	public List<Review> getReviews() {
 		return reviews;
@@ -136,6 +150,27 @@ public class User {
     }
     
     public boolean isAdmin() {
-    	return role != null && role.equals("ADMIN");
+    	return role != null && role.equals("admin");
     }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public LocalDateTime getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
 }
