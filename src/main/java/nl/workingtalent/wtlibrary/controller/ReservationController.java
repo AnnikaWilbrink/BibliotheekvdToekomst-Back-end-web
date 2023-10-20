@@ -74,7 +74,7 @@ public class ReservationController {
         reservation.setBook(book);
         reservation.setUser(user);
         reservation.setReservationDate(dto.getReservationDate());
-        reservation.setApproved(dto.isApproved());
+        reservation.setApproved(user.isAdmin());
         reservation.setDeleted(false);
         
         service.save(reservation);
@@ -111,7 +111,7 @@ public class ReservationController {
         existingReservation.setApproved(dto.isApproved());
 
         service.update(existingReservation);
-        return true;
+        return true; 
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value="reservation/{id}")
