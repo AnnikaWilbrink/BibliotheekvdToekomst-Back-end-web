@@ -102,7 +102,6 @@ public class BookController {
 	    existingBook.setCategory(dto.getCategory());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
-		existingBook.setEdition(dto.getEdition());
 		existingBook.setSubject(dto.getSubject());
 		existingBook.setSummary(dto.getSummary());
 
