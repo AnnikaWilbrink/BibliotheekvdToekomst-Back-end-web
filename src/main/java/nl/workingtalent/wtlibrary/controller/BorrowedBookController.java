@@ -123,14 +123,6 @@ public class BorrowedBookController {
         return true;
     }
     
-    
-    
-    // BOEK UITLENEN
-    // checkt of er een bookCopy beschikbaar is (numberOfAvailableCopies) anders niet goedkeuren
-    // kiest een bookCopy uit en zegt dat de admin/frdskmed deze maguitlenen.
-    // borrowedbook wordt aangemaakt met borrowDate als huidige datum en tijd
-    
-    
     @PostMapping("/borrowedBook/lend")
     public @ResponseBody Map<String, Object> lendBook(@RequestBody LendBorrowedBookDto dto) {
         Map<String, Object> response = new HashMap<>();
@@ -179,11 +171,8 @@ public class BorrowedBookController {
         	return response;
         }
         User user = optionalUser.get();
-         
-        // TODO: maakt BorrowedBook aan met huidige tijd en datum als BorrowedDate
         
-        
-     // Creating a new BorrowedBook record
+        // Creating a new BorrowedBook record
         BorrowedBook borrowedBook = new BorrowedBook();
         borrowedBook.setBorrowDate(java.time.LocalDateTime.now()); // Setting the current date-time as borrow date
         borrowedBook.setBookCopy(bookCopy);
