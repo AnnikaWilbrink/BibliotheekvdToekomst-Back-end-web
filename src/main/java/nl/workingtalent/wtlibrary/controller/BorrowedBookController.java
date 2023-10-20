@@ -9,12 +9,18 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.dto.BorrowedBookDto;
 import nl.workingtalent.wtlibrary.dto.LendBorrowedBookDto;
+import nl.workingtalent.wtlibrary.model.BookCopy;
 import nl.workingtalent.wtlibrary.model.BorrowedBook;
+import nl.workingtalent.wtlibrary.service.BookCopyService;
+import nl.workingtalent.wtlibrary.service.BookService;
 import nl.workingtalent.wtlibrary.service.BorrowedBookService;
 import nl.workingtalent.wtlibrary.service.ReservationService;
+import nl.workingtalent.wtlibrary.service.UserService;
 import nl.workingtalent.wtlibrary.model.Reservation;
+import nl.workingtalent.wtlibrary.model.User;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -25,6 +31,15 @@ public class BorrowedBookController {
     
     @Autowired
     private ReservationService reservationService;
+    
+    @Autowired
+    private BookService bookService;
+    
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private BookCopyService bookCopyService;
 
     @RequestMapping("borrowed-book/all")
     public List<BorrowedBookDto> findAllBorrowedBooks() {
@@ -47,9 +62,26 @@ public class BorrowedBookController {
     @RequestMapping(method = RequestMethod.POST, value = "borrowed-book/save")
     public boolean save(@RequestBody BorrowedBookDto dto) {
         BorrowedBook borrowedBook = new BorrowedBook();
+        
+        // find the User by the id in the dto
+        Optional <User> userOptional = userService.findById(dto.getUserId());
+        if (userOptional.isEmpty()) {
+        	return false;
+        }
+        User user = userOptional.get();
+        
+        // find the BookCopy by the id in the dto
+        Optional <BookCopy> bookCopyOptional = bookCopyService.findById(dto.getBookCopyId());
+        if (bookCopyOptional.isEmpty()) {
+        	return false;
+        }
+        BookCopy bookCopy = bookCopyOptional.get();
+        
         borrowedBook.setBorrowDate(dto.getBorrowDate());
         borrowedBook.setReturnedDate(dto.getReturnedDate());
-        // TODO: Set user and bookCopy based on dto's userId and bookCopyId
+        borrowedBook.setUser(user);
+        borrowedBook.setBookCopy(bookCopy);
+        
         service.save(borrowedBook);
         return true;
     }
@@ -94,12 +126,9 @@ public class BorrowedBookController {
     
     
     // BOEK UITLENEN
-    
     // checkt of er een bookCopy beschikbaar is (numberOfAvailableCopies) anders niet goedkeuren
- 
     // kiest een bookCopy uit en zegt dat de admin/frdskmed deze maguitlenen.
     // borrowedbook wordt aangemaakt met borrowDate als huidige datum en tijd
-    // 
     
     
     @PostMapping("/borrowedBook/lend")
@@ -117,50 +146,54 @@ public class BorrowedBookController {
         }
         Reservation reservation = optionalReservation.get();
         
-        Long bookId = reservation.getBook().getId();
+        long bookId = reservation.getBook().getId();
         
-
-        // TODO: Implementeer de logica om het boek uit te lenen gebaseerd op de dto
-
-        boolean success = true; // Dit is een dummy waarde. Je moet dit vervangen door de werkelijke logica om te bepalen of het uitlenen succesvol was.
-        response.put("success", success);
-        response.put("bookCopyId", dto.getBookCopyId()); // TODO: dit klopt nog niet
+        // vind Book aan de hand van bookId
+        Optional<Book> optionalBook = bookService.findById(bookId);
+        if (optionalBook.isEmpty()) {
+            // Handle the case where the book is not found
+            response.put("success", false);
+            response.put("message", "Book not found");
+            return response;
+        }
+        Book book = optionalBook.get();
+        
+        // Finding an available BookCopy for the given Book
+        Optional<BookCopy> optionalBookCopy = service.availableCopy(book);
+        if (optionalBookCopy.isEmpty()) {
+            response.put("success", false);
+            response.put("message", "No available copy for the book");
+            return response;
+        }
+        BookCopy bookCopy = optionalBookCopy.get();
+        
+        
+        // find User aan de hand van userid in reservation
+        Long userId = reservation.getUser().getId();
+        
+        Optional<User> optionalUser = userService.findById(userId);
+        if (optionalUser.isEmpty()) {
+        	// Handle the case where the user is not found
+        	response.put("success", false);
+        	response.put("message", "User not found");
+        	return response;
+        }
+        User user = optionalUser.get();
+         
+        // TODO: maakt BorrowedBook aan met huidige tijd en datum als BorrowedDate
+        
+        
+     // Creating a new BorrowedBook record
+        BorrowedBook borrowedBook = new BorrowedBook();
+        borrowedBook.setBorrowDate(java.time.LocalDateTime.now()); // Setting the current date-time as borrow date
+        borrowedBook.setBookCopy(bookCopy);
+        borrowedBook.setUser(user);
+        service.save(borrowedBook);
+        
+        
+        response.put("success", true);
+        response.put("bookCopyId", bookCopy.getId());
 
         return response;
     }
-    
-    
-   // TODO: verander deze functie
-//    @PostMapping(value="reservation/save")
-//    public boolean save(@RequestBody SaveReservationDto dto) {
-//        // ToDo: authorization maken met httpservlet
-//        Optional<User> userOptional = userService.findById(dto.getUserId());
-//        
-//        if (userOptional.isEmpty()) {
-//        	return false;
-//        }
-//        User user = userOptional.get();
-//        Optional<Book> bookOptional = bookService.findById(dto.getBookId());
-//        if (bookOptional.isEmpty()) {
-//            return false;
-//        }
-//        Book book = bookOptional.get();
-//        // Vind een beschikbaar exemplaar (en check of die wel bestaat)
-//        Optional<BookCopy> bookCopyOptional = service.availableCopy(book);
-//        if (bookCopyOptional.isEmpty()) {
-//        	return false;
-//        }
-//        BookCopy bookCopy = bookCopyOptional.get();
-//
-//        Reservation reservation = new Reservation();
-//
-//        reservation.setBookCopy(bookCopy);
-//        reservation.setUser(user);
-//        reservation.setReservationDate(dto.getReservationDate());
-//        reservation.setReservationStatus(dto.getReservationStatus());
-//
-//        service.save(reservation);
-//
-//        return true;
-//    }
 }
