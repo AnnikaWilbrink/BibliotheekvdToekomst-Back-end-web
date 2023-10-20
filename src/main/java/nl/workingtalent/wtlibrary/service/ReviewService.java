@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.Review;
 import nl.workingtalent.wtlibrary.repository.IReviewRepository;
 
@@ -19,6 +20,10 @@ public class ReviewService {
 	
 	public List<Review> findAll(){
 		return repository.findAll();
+	}
+	
+	public List<Review> findAllForThisBook(Book book) {
+		return repository.findByBook(book);
 	}
 	
 	public void save(Review review) {
