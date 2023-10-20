@@ -123,7 +123,8 @@ public class BorrowedBookController {
         return true;
     }
     
-    @PostMapping("/borrowedBook/lend")
+    
+    @PostMapping("borrowed-book/save/{id}")
     public @ResponseBody Map<String, Object> lendBook(@RequestBody LendBorrowedBookDto dto) {
         Map<String, Object> response = new HashMap<>();
         
