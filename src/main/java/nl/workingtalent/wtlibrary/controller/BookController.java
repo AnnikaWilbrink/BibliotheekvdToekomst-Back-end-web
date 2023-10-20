@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,8 +70,16 @@ public class BookController {
 		book.setSubject(dto.getSubject());
 		book.setSummary(dto.getSummary());
 		
-		service.save(book);
-		return true;
+//		service.save(book);
+//		return true;
+//		
+		try {
+	        // Attempt to save the book
+	        service.save(book);
+	        return true;
+	    } catch (DataIntegrityViolationException e) {
+	        return false; 
+	    }
 	}
 	
 	@RequestMapping("book/{id}")
