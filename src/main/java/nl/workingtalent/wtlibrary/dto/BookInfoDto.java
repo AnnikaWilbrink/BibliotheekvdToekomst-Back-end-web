@@ -13,8 +13,12 @@ public class BookInfoDto {
 	private String coverUrl;
 	
 	private String subject;
+	
+	private String availablity;
 
 	private String category;
+	
+	private String edition;
 
 	public String getTitle() {
 		return title;
@@ -64,6 +68,14 @@ public class BookInfoDto {
 		this.subject = subject;
 	}
 
+	public String getAvailablity() {
+		return availablity;
+	}
+
+	public void setAvailablity(String availablity) {
+		this.availablity = availablity;
+	}
+
 	public String getCategory() {
 		return category;
 	}
@@ -71,5 +83,14 @@ public class BookInfoDto {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+
+	public String getEdition() {
+		return edition;
+	}
+
+	public void setEdition(String edition) {
+		this.edition = edition;
+	}
+	
 	
 }

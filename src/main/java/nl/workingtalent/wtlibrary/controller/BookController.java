@@ -123,6 +123,8 @@ public class BookController {
 		dto.setSubject(book.getSubject());
 		dto.setSummary(book.getSummary());
 		dto.setTitle(book.getTitle());
+		dto.setAvailablity(book.getAvailablity());
+		dto.setEdition(book.getEdition());
 		
 		return Optional.of(dto);
 	}
