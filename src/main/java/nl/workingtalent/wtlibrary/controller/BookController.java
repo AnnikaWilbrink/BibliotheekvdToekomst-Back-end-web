@@ -124,6 +124,7 @@ public class BookController {
 		
 		BookInfoDto dto = new BookInfoDto();
 		
+		dto.setId(book.getId());
 		dto.setAuthor(book.getAuthor());
 		dto.setCategory(book.getCategory());
 		dto.setCoverUrl(book.getCoverUrl());
@@ -131,6 +132,8 @@ public class BookController {
 		dto.setSubject(book.getSubject());
 		dto.setSummary(book.getSummary());
 		dto.setTitle(book.getTitle());
+		dto.setAvailablity(book.getAvailablity());
+		dto.setEdition(book.getEdition());
 		
 		return Optional.of(dto);
 	}
