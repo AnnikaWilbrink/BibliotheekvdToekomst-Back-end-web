@@ -2,6 +2,8 @@ package nl.workingtalent.wtlibrary.dto;
 
 public class BookInfoDto {
 	
+	private long id;
+	
 	private String title;
 	
 	private String isbn;
@@ -19,6 +21,14 @@ public class BookInfoDto {
 	private String category;
 	
 	private String edition;
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;
