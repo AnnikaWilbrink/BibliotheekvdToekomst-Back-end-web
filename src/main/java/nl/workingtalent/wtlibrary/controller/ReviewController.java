@@ -67,6 +67,32 @@ public class ReviewController {
     	return Collections.emptyList(); // Return an empty list
     }
     
+    @GetMapping("review/book/{id}")
+    public List<ReviewDto> findAllForThisBook(@PathVariable long id) {
+    	Optional<Book> bookOptional = bookService.findById(id);
+        if (bookOptional.isEmpty()) {
+            return Collections.emptyList(); // Return an empty list
+        }
+        Book book = bookOptional.get();
+        
+        List<ReviewDto> dtos = new ArrayList<>();
+        
+        List<Review> reviews = reviewService.findAllForThisBook(book);
+        
+        reviews.forEach(review -> {
+            ReviewDto dto = new ReviewDto();
+            dto.setId(review.getId());
+            dto.setBookId(review.getBook().getId());
+            dto.setUserId(review.getUser().getId());
+            dto.setText(review.getText());
+            dto.setStars(review.getStars());
+ 
+            dtos.add(dto);
+        });
+        
+        return dtos;
+    }
+    
     @PostMapping(value="review/save")
     public boolean save(@RequestBody SaveReviewDto dto, HttpServletRequest request) {
     	User loggedInUser = (User)request.getAttribute("WT_USER");
