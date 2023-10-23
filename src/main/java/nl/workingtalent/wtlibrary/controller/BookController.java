@@ -98,7 +98,7 @@ public class BookController {
 	    existingBook.setTitle(dto.getTitle());
 	    existingBook.setIsbn(dto.getIsbn());
 	    existingBook.setAuthor(dto.getAuthor());
-//	    existingBook.setAvailablity(dto.getAvailablity());
+	    existingBook.setAvailablity(dto.getAvailablity());
 	    existingBook.setCategory(dto.getCategory());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
