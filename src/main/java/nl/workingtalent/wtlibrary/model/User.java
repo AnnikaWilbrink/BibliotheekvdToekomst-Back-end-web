@@ -157,14 +157,6 @@ public class User {
         this.registrationDate = registrationDate;
     }
 
-    public LocalDateTime getLastUpdatedDate() {
-        return lastUpdatedDate;
-    }
-
-    public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
-        this.lastUpdatedDate = lastUpdatedDate;
-    }
-
     public List<Reservation> getReservations() {
         return reservations;
     }

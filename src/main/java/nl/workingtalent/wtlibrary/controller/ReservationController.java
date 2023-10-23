@@ -50,6 +50,7 @@ public class ReservationController {
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dto.setBookTitle(reservation.getBook().getTitle());
+            dto.setBookId(reservation.getBook().getId());
             dtos.add(dto);
         });
         
@@ -97,6 +98,7 @@ public class ReservationController {
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dto.setBookTitle(reservation.getBook().getTitle());
+            dto.setBookId(reservation.getBook().getId());
             return Optional.of(dto);
         }
         

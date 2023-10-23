@@ -6,7 +6,7 @@ public class BookCopyDto {
     
     private boolean available;
     
-    private int copyNumber;
+    private long copyNumber;
 
 	public long getId() {
 		return id;
@@ -16,11 +16,11 @@ public class BookCopyDto {
 		this.id = id;
 	}
 
-	public int getCopyNumber() {
+	public long getCopyNumber() {
 		return copyNumber;
 	}
 
-	public void setCopyNumber(int copyNumber) {
+	public void setCopyNumber(long copyNumber) {
 		this.copyNumber = copyNumber;
 	}
 

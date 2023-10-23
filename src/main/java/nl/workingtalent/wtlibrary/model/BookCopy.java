@@ -18,7 +18,7 @@ public class BookCopy {
     private boolean available;
     
     @Column(nullable = false)
-    private int copyNumber;
+    private long copyNumber;
 
 	@ManyToOne
 	private Book book;
@@ -31,11 +31,11 @@ public class BookCopy {
 		this.id = id;
 	}
 
-	public int getCopyNumber() {
+	public long getCopyNumber() {
 		return copyNumber;
 	}
 
-	public void setCopyNumber(int copyNumber) {
+	public void setCopyNumber(long copyNumber) {
 		this.copyNumber = copyNumber;
 	}
 

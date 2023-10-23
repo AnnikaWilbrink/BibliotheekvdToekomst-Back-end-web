@@ -20,6 +20,8 @@ public class ReservationDto {
 
 	private String BookTitle;
 
+	private long BookId;
+
 	public long getId() {
 		return id;
 	}
@@ -82,6 +84,14 @@ public class ReservationDto {
 
     public void setBorrowed(boolean borrowed) {
         this.borrowed = borrowed;
+    }
+
+    public long getBookId() {
+        return BookId;
+    }
+
+    public void setBookId(long BookId) {
+        this.BookId = BookId;
     }
 
 }

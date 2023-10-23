@@ -3,13 +3,21 @@ package nl.workingtalent.wtlibrary.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import nl.workingtalent.wtlibrary.dto.BorrowedBookDto;
+import nl.workingtalent.wtlibrary.dto.CreateBorrowedBookDto;
+import nl.workingtalent.wtlibrary.model.BookCopy;
 import nl.workingtalent.wtlibrary.model.BorrowedBook;
+import nl.workingtalent.wtlibrary.model.Reservation;
+import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.service.BorrowedBookService;
+import nl.workingtalent.wtlibrary.service.BookCopyService;
+import nl.workingtalent.wtlibrary.service.ReservationService;
+import nl.workingtalent.wtlibrary.service.UserService;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -17,6 +25,15 @@ public class BorrowedBookController {
 
     @Autowired
     private BorrowedBookService service;
+
+    @Autowired
+    private ReservationService reservationService;
+    
+    @Autowired
+    private BookCopyService bookCopyService;
+    
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("borrowed-book/all")
     public List<BorrowedBookDto> findAllBorrowedBooks() {
@@ -37,14 +54,28 @@ public class BorrowedBookController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "borrowed-book/save")
-    public boolean save(@RequestBody BorrowedBookDto dto) {
+    public boolean save(@RequestBody CreateBorrowedBookDto dto) {
+        Optional<User> userOptional = userService.findById(dto.getUserId());
+        if (userOptional.isEmpty()) {
+        	return false;
+        }
+        User user = userOptional.get();
+        Optional<BookCopy> bookCopyOptional = bookCopyService.findById(dto.getBookCopyId());
+        if (bookCopyOptional.isEmpty()) {
+            return false;
+        }
+        BookCopy bookCopy = bookCopyOptional.get();
+
         BorrowedBook borrowedBook = new BorrowedBook();
-        borrowedBook.setBorrowDate(dto.getBorrowDate());
-        borrowedBook.setReturnedDate(dto.getReturnedDate());
-        // TODO: Set user and bookCopy based on dto's userId and bookCopyId
+        borrowedBook.setId(dto.getId());
+        borrowedBook.setBorrowDate(LocalDateTime.now());
+        borrowedBook.setReturnedDate(null);
+        borrowedBook.setUser(user);
+        borrowedBook.setBookCopy(bookCopy);
         service.save(borrowedBook);
         return true;
     }
+
 
     @RequestMapping("borrowed-book/{id}")
     public Optional<BorrowedBookDto> findById(@PathVariable long id) {
