@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.BookCopy;
 import nl.workingtalent.wtlibrary.repository.IBookCopyRepository;
 
@@ -16,6 +17,10 @@ public class BookCopyService {
 	
 	public List<BookCopy> findAll(){
 		return repository.findAll();
+	}
+	
+	public List<BookCopy> findByBook(Book book) {
+		return repository.findByBook(book);
 	}
 	
 	public void save(BookCopy bookCopy) {

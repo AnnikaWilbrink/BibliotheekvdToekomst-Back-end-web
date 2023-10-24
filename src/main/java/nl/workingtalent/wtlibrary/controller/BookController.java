@@ -3,8 +3,10 @@ package nl.workingtalent.wtlibrary.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import nl.workingtalent.wtlibrary.dto.BookAvailabilityDto;
 import nl.workingtalent.wtlibrary.dto.BookDto;
 import nl.workingtalent.wtlibrary.dto.BookInfoDto;
+import nl.workingtalent.wtlibrary.dto.FilterBookDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookDto;
-import nl.workingtalent.wtlibrary.dto.SearchBookDto;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.service.BookService;
 
@@ -69,8 +71,16 @@ public class BookController {
 		book.setSubject(dto.getSubject());
 		book.setSummary(dto.getSummary());
 		
-		service.save(book);
-		return true;
+//		service.save(book);
+//		return true;
+//		
+		try {
+	        // Attempt to save the book
+	        service.save(book);
+	        return true;
+	    } catch (DataIntegrityViolationException e) {
+	        return false; 
+	    }
 	}
 	
 	@RequestMapping("book/{id}")
@@ -93,7 +103,6 @@ public class BookController {
 	    existingBook.setCategory(dto.getCategory());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
-		existingBook.setEdition(dto.getEdition());
 		existingBook.setSubject(dto.getSubject());
 		existingBook.setSummary(dto.getSummary());
 
@@ -116,6 +125,7 @@ public class BookController {
 		
 		BookInfoDto dto = new BookInfoDto();
 		
+		dto.setId(book.getId());
 		dto.setAuthor(book.getAuthor());
 		dto.setCategory(book.getCategory());
 		dto.setCoverUrl(book.getCoverUrl());
@@ -123,13 +133,36 @@ public class BookController {
 		dto.setSubject(book.getSubject());
 		dto.setSummary(book.getSummary());
 		dto.setTitle(book.getTitle());
+		dto.setAvailablity(book.getAvailablity());
+		dto.setEdition(book.getEdition());
 		
 		return Optional.of(dto);
 	}
 	
-	@PostMapping("book/search")
-	public List<Book> search(@RequestBody SearchBookDto dto ) {
-		return service.search(dto.getSearchWord());
+//	@PostMapping("book/search")
+//	public List<Book> search(@RequestBody SearchBookDto dto ) {
+//		return service.search(dto.getSearchWord());
+//	}
+
+	@PostMapping("book/filter")
+	public List<BookDto> filter(@RequestBody FilterBookDto dto ) {
+		List<Book> books = service.filter(dto.getFilterWord(), dto.getCategories(), dto.getMinReviewScore());
+		
+		return books.stream().map(book -> {
+			BookDto bookDto = new BookDto();
+			
+			bookDto.setAuthor(book.getAuthor());
+			//bookDto.setAvailablity(book.getAvailablity());
+			bookDto.setCategory(book.getCategory());
+			bookDto.setCoverUrl(book.getCoverUrl());
+			bookDto.setId(book.getId());
+			bookDto.setIsbn(book.getIsbn());
+			bookDto.setSubject(book.getSubject());
+			bookDto.setSummary(book.getSummary());
+			bookDto.setTitle(book.getTitle());
+			
+			return bookDto;
+		}).collect(Collectors.toList());
 	}
 	
 	@GetMapping("book/availability/{id}")
