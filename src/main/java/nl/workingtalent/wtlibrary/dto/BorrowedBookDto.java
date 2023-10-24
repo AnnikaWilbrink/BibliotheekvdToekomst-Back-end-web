@@ -7,6 +7,9 @@ public class BorrowedBookDto {
     private long id;
     private long userId;
     private long bookCopyId;
+    private String userFirstName;
+    private String userLastName;
+    private String bookTitle;
     private LocalDateTime borrowDate;
     private LocalDateTime returnedDate;
 
@@ -50,4 +53,29 @@ public class BorrowedBookDto {
     public void setReturnedDate(LocalDateTime returnedDate) {
         this.returnedDate = returnedDate;
     }
+
+    public String getUserFirstName() {
+        return userFirstName;
+    }
+
+    public void setUserFirstName(String userFirstName) {
+        this.userFirstName = userFirstName;
+    }
+
+    public String getUserLastName() {
+        return userLastName;
+    }
+
+    public void setUserLastName(String userLastName) {
+        this.userLastName = userLastName;
+    }
+    
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
+
 }

@@ -44,6 +44,9 @@ public class BorrowedBookController {
             BorrowedBookDto dto = new BorrowedBookDto();
             dto.setId(borrowedBook.getId());
             dto.setUserId(borrowedBook.getUser().getId());
+            dto.setUserFirstName(borrowedBook.getUser().getFirstName());
+            dto.setUserLastName(borrowedBook.getUser().getLastName());
+            dto.setBookTitle(borrowedBook.getBookTitle());
             dto.setBookCopyId(borrowedBook.getBookCopy().getId());
             dto.setBorrowDate(borrowedBook.getBorrowDate());
             dto.setReturnedDate(borrowedBook.getReturnedDate());
@@ -71,6 +74,7 @@ public class BorrowedBookController {
         borrowedBook.setBorrowDate(LocalDateTime.now());
         borrowedBook.setReturnedDate(null);
         borrowedBook.setUser(user);
+        borrowedBook.setBookTitle(dto.getBookTitle());
         borrowedBook.setBookCopy(bookCopy);
         service.save(borrowedBook);
         return true;
@@ -85,6 +89,7 @@ public class BorrowedBookController {
             BorrowedBookDto dto = new BorrowedBookDto();
             dto.setId(borrowedBook.getId());
             dto.setUserId(borrowedBook.getUser().getId());
+            dto.setBookTitle(borrowedBook.getBookTitle());
             dto.setBookCopyId(borrowedBook.getBookCopy().getId());
             dto.setBorrowDate(borrowedBook.getBorrowDate());
             dto.setReturnedDate(borrowedBook.getReturnedDate());
@@ -101,8 +106,8 @@ public class BorrowedBookController {
             return false;
         }
         BorrowedBook existingBorrowedBook = optional.get();
-        existingBorrowedBook.setBorrowDate(dto.getBorrowDate());
-        existingBorrowedBook.setReturnedDate(dto.getReturnedDate());
+        //existingBorrowedBook.setBorrowDate(dto.getBorrowDate());
+        existingBorrowedBook.setReturnedDate(LocalDateTime.now());
         // TODO: Set user and bookCopy based on dto's userId and bookCopyId
         service.update(existingBorrowedBook);
         return true;
