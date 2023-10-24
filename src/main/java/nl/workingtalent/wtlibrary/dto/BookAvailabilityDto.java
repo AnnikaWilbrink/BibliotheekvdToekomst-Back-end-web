@@ -14,6 +14,8 @@ public class BookAvailabilityDto {
 
 	private ArrayList<Long> available;
 
+	private ArrayList<Long> availableIds;
+
 	public int getNumberOfCopies() {
 		return numberOfCopies;
 	}
@@ -46,8 +48,12 @@ public class BookAvailabilityDto {
         this.available = available;
     }
 
+    public ArrayList<Long> getAvailableIds() {
+        return availableIds;
+    }
 	
-
-
+    public void setAvailableIds(ArrayList<Long> availableIds) {
+        this.availableIds = availableIds;
+    }
 
 }

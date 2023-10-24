@@ -14,6 +14,8 @@ public class ReservationDto {
 
 	private boolean borrowed;
 
+    private long userId;
+
 	private String UserFirstName;
 
 	private String UserLastName;
@@ -92,6 +94,14 @@ public class ReservationDto {
 
     public void setBookId(long BookId) {
         this.BookId = BookId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
 }

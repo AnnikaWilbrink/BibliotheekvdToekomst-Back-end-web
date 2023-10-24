@@ -160,11 +160,13 @@ public class BookController {
 		dto.setNumberOfAvailableCopies(service.findNrOfAvailableCopies(book));
 		List<BookCopy> availableCopies = bookCopyService.findAvailableCopies(book);
 		ArrayList<Long> availableCopyIds = new ArrayList<>();
+		ArrayList<Long> availableCopyNrs = new ArrayList<>();
 		for (BookCopy bookCopy : availableCopies) {
-
-			availableCopyIds.add(bookCopy.getCopyNumber());
+			availableCopyNrs.add(bookCopy.getCopyNumber());
+			availableCopyIds.add(bookCopy.getId());
 			}
-		dto.setAvailable(availableCopyIds);
+		dto.setAvailable(availableCopyNrs);
+		dto.setAvailableIds(availableCopyIds);
 		//dto.setAvailableCopies(bookCopyService.findAvailableCopies(book));
 		return dto;
 	}
