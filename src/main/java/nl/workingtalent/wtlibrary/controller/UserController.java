@@ -180,8 +180,6 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.PUT, value = "user/changePhoneNumber")
 	public ResponseEntity<?> changePhoneNumber(@RequestBody UserChangePhoneNumberDto dto, HttpServletRequest request) {
 	    User user = (User) request.getAttribute("WT_USER");
-	    
-	    System.out.println(user); // check
 
 	    if (user == null) {
 	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);

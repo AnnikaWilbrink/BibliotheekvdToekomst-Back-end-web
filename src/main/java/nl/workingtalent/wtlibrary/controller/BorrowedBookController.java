@@ -9,8 +9,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.dto.BorrowedBookDto;
+import nl.workingtalent.wtlibrary.dto.BorrowedBookTableDto;
 import nl.workingtalent.wtlibrary.dto.LendBorrowedBookDto;
 import nl.workingtalent.wtlibrary.model.BookCopy;
 import nl.workingtalent.wtlibrary.model.BorrowedBook;
@@ -186,4 +188,19 @@ public class BorrowedBookController {
 
         return response;
     }
+    
+    
+    @GetMapping("/user/borrowed-books-list")
+    public List<BorrowedBookTableDto> getUserBorrowedBooks(HttpServletRequest request) {
+        User user = (User) request.getAttribute("WT_USER");
+        
+        if(user == null) {
+            throw new RuntimeException("User not found.");
+        }
+        
+        List<BorrowedBookTableDto> borrowedBookDTOs = service.findDtosByUser(user);
+        
+        return borrowedBookDTOs;
+    }
+    
 }

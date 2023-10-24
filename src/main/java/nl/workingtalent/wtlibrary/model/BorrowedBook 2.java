@@ -1,5 +1,5 @@
 package nl.workingtalent.wtlibrary.model;
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;
 
 
 import jakarta.persistence.GeneratedValue;
@@ -8,10 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "borrowed_book")
 public class BorrowedBook {
 
 	@Id
