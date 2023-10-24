@@ -64,4 +64,26 @@ public class BookService {
 		
 		return i;
 	}
+	
+    public boolean archiveBook(Long bookId) {
+        Optional<Book> bookOptional = repository.findById(bookId);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            book.setArchived(true);
+            repository.save(book);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean unarchiveBook(Long bookId) {
+        Optional<Book> bookOptional = repository.findById(bookId);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            book.setArchived(false);
+            repository.save(book);
+            return true;
+        }
+        return false;
+    }
 }

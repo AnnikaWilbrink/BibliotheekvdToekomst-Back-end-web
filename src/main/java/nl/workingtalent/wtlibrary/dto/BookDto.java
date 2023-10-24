@@ -23,6 +23,8 @@ public class BookDto {
 	private String category;
 	
 	private String edition;
+	
+	private boolean archived;
 
 	public String getSubject() {
 		return subject;
@@ -110,6 +112,14 @@ public class BookDto {
 
 	public void setEdition(String edition) {
 		this.edition = edition;
+	}
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 	
 }

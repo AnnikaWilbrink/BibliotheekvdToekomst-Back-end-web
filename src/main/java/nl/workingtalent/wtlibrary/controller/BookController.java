@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import nl.workingtalent.wtlibrary.dto.BookArchiveDto;
 import nl.workingtalent.wtlibrary.dto.BookAvailabilityDto;
 import nl.workingtalent.wtlibrary.dto.BookDto;
 import nl.workingtalent.wtlibrary.dto.BookInfoDto;
@@ -48,6 +50,7 @@ public class BookController {
 //			bookDto.setAvailablity(dbBook.getAvailablity());
 			bookDto.setSubject(dbBook.getSubject());
 			bookDto.setCategory(dbBook.getCategory());
+			bookDto.setArchived(dbBook.isArchived());
 			//bookDto.setReviews(dbBook.getReviews());
 
 			dtos.add(bookDto);
@@ -99,7 +102,7 @@ public class BookController {
 	    existingBook.setTitle(dto.getTitle());
 	    existingBook.setIsbn(dto.getIsbn());
 	    existingBook.setAuthor(dto.getAuthor());
-//	    existingBook.setAvailablity(dto.getAvailablity());
+	    existingBook.setAvailablity(dto.getAvailablity());
 	    existingBook.setCategory(dto.getCategory());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
@@ -180,4 +183,22 @@ public class BookController {
 		
 		return dto;
 	}
+	
+	@PutMapping("book/archive/{id}")
+    public BookArchiveDto archiveBook(@PathVariable long id) {
+        BookArchiveDto archived = new BookArchiveDto();
+        boolean isArchived = service.archiveBook(id);
+        archived.setArchived(isArchived);
+        return archived;
+        
+    }
+	
+	@PutMapping("book/unarchive/{id}")
+    public BookArchiveDto unarchiveBook(@PathVariable long id) {
+        BookArchiveDto archived = new BookArchiveDto();
+        boolean isArchived = service.unarchiveBook(id);
+        archived.setArchived(isArchived);
+        return archived;
+        
+    }
 }

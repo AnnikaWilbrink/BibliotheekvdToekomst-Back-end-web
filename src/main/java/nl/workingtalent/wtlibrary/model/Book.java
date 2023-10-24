@@ -44,6 +44,9 @@ public class Book {
     @Column(length = 50, nullable = false)
     private String availablity;
     
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean archived;
+    
     @OneToMany(mappedBy = "book")
 	private List<Reservation> reservations;
     
@@ -136,6 +139,14 @@ public class Book {
 		this.availablity = availablity;
 	}
 	
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
 	public List<Reservation> getReservations() {
 		return reservations;
 	}
