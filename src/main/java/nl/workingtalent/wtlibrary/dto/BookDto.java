@@ -14,13 +14,15 @@ public class BookDto {
 
 	private String coverUrl;
 
-//	private String availablity;
+	private String availablity;
 
 	private String reviews; // TODO: dit moet een list zijn toch?
 	
 	private String subject;
 
 	private String category;
+	
+	private String edition;
 
 	public String getSubject() {
 		return subject;
@@ -86,13 +88,13 @@ public class BookDto {
 		this.coverUrl = coverUrl;
 	}
 
-//	public String getAvailablity() {
-//		return availablity;
-//	}
-//
-//	public void setAvailablity(String availablity) {
-//		this.availablity = availablity;
-//	}
+	public String getAvailablity() {
+		return availablity;
+	}
+
+	public void setAvailablity(String availablity) {
+		this.availablity = availablity;
+	}
 
 	public String getReviews() {
 		return reviews;
@@ -102,5 +104,12 @@ public class BookDto {
 		this.reviews = reviews;
 	}
 
+	public String getEdition() {
+		return edition;
+	}
+
+	public void setEdition(String edition) {
+		this.edition = edition;
+	}
 	
 }

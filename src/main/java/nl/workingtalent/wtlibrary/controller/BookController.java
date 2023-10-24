@@ -103,7 +103,6 @@ public class BookController {
 	    existingBook.setCategory(dto.getCategory());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
-		existingBook.setEdition(dto.getEdition());
 		existingBook.setSubject(dto.getSubject());
 		existingBook.setSummary(dto.getSummary());
 
@@ -126,6 +125,7 @@ public class BookController {
 		
 		BookInfoDto dto = new BookInfoDto();
 		
+		dto.setId(book.getId());
 		dto.setAuthor(book.getAuthor());
 		dto.setCategory(book.getCategory());
 		dto.setCoverUrl(book.getCoverUrl());
@@ -133,6 +133,8 @@ public class BookController {
 		dto.setSubject(book.getSubject());
 		dto.setSummary(book.getSummary());
 		dto.setTitle(book.getTitle());
+		dto.setAvailablity(book.getAvailablity());
+		dto.setEdition(book.getEdition());
 		
 		return Optional.of(dto);
 	}
