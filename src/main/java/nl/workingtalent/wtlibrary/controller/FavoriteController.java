@@ -67,26 +67,20 @@ public class FavoriteController {
     		return false;
     	}
     	
-    	Optional <User> userOptional = userService.findById(dto.getUserId());
-        if (userOptional.isEmpty()) {
-        	return false;
-        }
-        User user = userOptional.get();
-        
+    	Optional<User> userOptional = userService.findById(dto.getUserId());
         Optional<Book> bookOptional = bookService.findById(dto.getBookId());
-        if (bookOptional.isEmpty()) {
-            return false;
-        }
-        Book book = bookOptional.get();
-        
-        if (loggedInUser.getId() == user.getId()) {
-        	Favorite favorite = new Favorite();
 
-        	favorite.setUser(user);
-        	favorite.setBook(book);
-        	
-            service.save(favorite);
-            return true;
+        if (userOptional.isPresent() && bookOptional.isPresent()) {
+            User user = userOptional.get();
+            Book book = bookOptional.get();
+
+            if (loggedInUser.getId() == user.getId()) {
+                Favorite favorite = new Favorite();
+                favorite.setUser(user);
+                favorite.setBook(book);
+                service.save(favorite);
+                return true;
+            }
         }
     	return false;
     }
@@ -94,9 +88,9 @@ public class FavoriteController {
     @DeleteMapping("favorite/delete")
     public void delete(@RequestBody FavoriteDto dto, HttpServletRequest request) {
     	Optional <User> userOptional = userService.findById(dto.getUserId());
-    	User user = userOptional.get();
-    	
     	Optional<Book> bookOptional = bookService.findById(dto.getBookId());
+    	
+    	User user = userOptional.get();
     	Book book = bookOptional.get();
     	
     	Favorite favorite = service.findByUserIdAndBookId(user.getId(), book.getId());
