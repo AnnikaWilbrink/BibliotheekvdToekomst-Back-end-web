@@ -23,7 +23,7 @@ public class BookSearchRepository {
 	@Autowired
 	private EntityManager em;
 
-	public List<Book> search(String filterWord, List<String> categories, Integer minReviewScore) {
+	public List<Book> search(String filterWord, List<String> isCategory, Integer minReviewScore) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Book> cq = cb.createQuery(Book.class);
 
@@ -39,12 +39,11 @@ public class BookSearchRepository {
         	predicates.add(searchWordPredicate);
         }
 
-        if (categories != null && !categories.isEmpty()) {
-        	In<String> in = cb.in(book.get("category"));
-        	categories.forEach(p -> in.value(p));
-
-        	predicates.add(in);
-        }
+        if (isCategory != null && !isCategory.isEmpty()) {
+			
+			Predicate searchCategoryPredicate = cb.equal(book.get("category"), isCategory);
+			predicates.add(searchCategoryPredicate);
+		}
 		
 
         if (minReviewScore != null) {
