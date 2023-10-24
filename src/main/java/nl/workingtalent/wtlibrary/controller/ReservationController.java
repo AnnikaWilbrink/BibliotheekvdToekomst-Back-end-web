@@ -47,6 +47,7 @@ public class ReservationController {
             dto.setApproved(reservation.isApproved());
             dto.setDeleted(reservation.isDeleted());
             dto.setBorrowed(reservation.isBorrowed());
+            dto.setUserId(reservation.getUser().getId());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dto.setBookTitle(reservation.getBook().getTitle());
