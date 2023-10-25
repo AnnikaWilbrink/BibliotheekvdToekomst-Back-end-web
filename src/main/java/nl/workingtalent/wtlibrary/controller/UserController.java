@@ -193,5 +193,23 @@ public class UserController {
 	    }
 	}
 
+	
+	// function to delete ALL user data
+	@RequestMapping(method = RequestMethod.POST, value = "user/deleteUser")
+	public ResponseEntity<?> deleteCurrentUser(@RequestBody UserLoginDto dto, HttpServletRequest request) {
+	    User loggedInUser = (User) request.getAttribute("WT_USER");
+	    
+	    // If no user is logged in, reject the request
+	    if (loggedInUser == null) {
+	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+	    }
+
+	    // Deleting the current logged-in user
+	    // The other data, like reviews will automatically also be deleted (cascade)
+	    service.delete(loggedInUser.getId());
+
+	    return new ResponseEntity<>("User information deleted successfully", HttpStatus.OK);
+	}
+	
 
 }
