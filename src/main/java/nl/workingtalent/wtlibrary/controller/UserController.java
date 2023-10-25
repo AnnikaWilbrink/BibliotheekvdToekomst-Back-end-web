@@ -59,6 +59,11 @@ public class UserController {
 		User user = new User();
 		user.setFirstName(dto.getFirstName());
 		user.setLastName(dto.getLastName());
+		if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+			user.setPassword(dto.getPassword()); 
+		} else {
+			return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+		}
 		user.setPassword(dto.getPassword()); // Consider hashing before saving
 		user.setRole(dto.getRole());
 		user.setEmail(dto.getEmail());
