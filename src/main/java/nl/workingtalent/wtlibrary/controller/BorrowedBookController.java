@@ -106,9 +106,7 @@ public class BorrowedBookController {
             return false;
         }
         BorrowedBook existingBorrowedBook = optional.get();
-        //existingBorrowedBook.setBorrowDate(dto.getBorrowDate());
         existingBorrowedBook.setReturnedDate(LocalDateTime.now());
-        // TODO: Set user and bookCopy based on dto's userId and bookCopyId
         service.update(existingBorrowedBook);
         return true;
     }
