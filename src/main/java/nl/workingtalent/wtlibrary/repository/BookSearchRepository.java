@@ -23,7 +23,7 @@ public class BookSearchRepository {
 	@Autowired
 	private EntityManager em;
 
-	public List<Book> search(String filterWord, List<String> isCategory, Integer minReviewScore) {
+	public List<Book> search(String filterWord, List<String> isCategory, List<String> hasSubject, Integer minReviewScore) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Book> cq = cb.createQuery(Book.class);
 
@@ -40,11 +40,20 @@ public class BookSearchRepository {
         }
 
         if (isCategory != null && !isCategory.isEmpty()) {
+			for (String i : isCategory) {
+				Predicate searchCategoryPredicate = cb.equal(book.get("category"), i);
+				predicates.add(searchCategoryPredicate);
+			}
 			
-			Predicate searchCategoryPredicate = cb.equal(book.get("category"), isCategory);
-			predicates.add(searchCategoryPredicate);
 		}
-		
+
+		if (hasSubject != null && !hasSubject.isEmpty()) {
+			for (String i : hasSubject) {
+				Predicate searchSubjectPredicate = cb.equal(book.get("subject"), i);
+				predicates.add(searchSubjectPredicate);
+			}
+			
+		}
 
         if (minReviewScore != null) {
         	Join<Book, Review> bookReviewsJoin = book.join("reviews");

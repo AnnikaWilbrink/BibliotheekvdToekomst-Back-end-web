@@ -8,7 +8,9 @@ public class FilterBookDto {
 
     private List<String> categories;
 
-    private Integer minReviewScore;
+	private List<String> subject;
+
+	private Integer minReviewScore;
 
 	public String getFilterWord() {
 		return filterWord;
@@ -24,6 +26,14 @@ public class FilterBookDto {
 
 	public void setCategories(List<String> categories) {
 		this.categories = categories;
+	}
+
+	public List<String> getSubject() {
+		return subject;
+	}
+
+	public void setSubject(List<String> subject) {
+		this.subject = subject;
 	}
 
 	public Integer getMinReviewScore() {
