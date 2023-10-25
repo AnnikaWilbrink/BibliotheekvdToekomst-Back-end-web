@@ -46,8 +46,12 @@ public class ReservationController {
             dto.setReservationDate(reservation.getReservationDate());
             dto.setApproved(reservation.isApproved());
             dto.setDeleted(reservation.isDeleted());
+            dto.setBorrowed(reservation.isBorrowed());
+            dto.setUserId(reservation.getUser().getId());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
+            dto.setBookTitle(reservation.getBook().getTitle());
+            dto.setBookId(reservation.getBook().getId());
             dtos.add(dto);
         });
         
@@ -76,7 +80,7 @@ public class ReservationController {
         reservation.setReservationDate(dto.getReservationDate());
         reservation.setApproved(user.isAdmin());
         reservation.setDeleted(false);
-        
+        reservation.setBorrowed(false);
         service.save(reservation);
         return true;
     }
@@ -91,9 +95,12 @@ public class ReservationController {
             dto.setReservationDate(reservation.getReservationDate());
             dto.setApproved(reservation.isApproved());
             dto.setDeleted(reservation.isDeleted());
+            dto.setBorrowed(reservation.isBorrowed());
+            dto.setUserId(reservation.getUser().getId());
             dto.setUserFirstName(reservation.getUser().getFirstName());
             dto.setUserLastName(reservation.getUser().getLastName());
             dto.setBookTitle(reservation.getBook().getTitle());
+            dto.setBookId(reservation.getBook().getId());
             return Optional.of(dto);
         }
         
@@ -109,7 +116,8 @@ public class ReservationController {
         Reservation existingReservation = optional.get();
         // existingReservation.setReservationDate(dto.getReservationDate());
         existingReservation.setApproved(dto.isApproved());
-
+        existingReservation.setDeleted(dto.isDeleted());
+        existingReservation.setBorrowed(dto.isBorrowed());
         service.update(existingReservation);
         return true; 
     }

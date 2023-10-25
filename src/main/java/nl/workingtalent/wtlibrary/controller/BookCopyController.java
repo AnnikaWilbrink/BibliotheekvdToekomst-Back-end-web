@@ -95,7 +95,7 @@ public class BookCopyController {
 	    BookCopy existingBookCopy = optional.get();
 	    
 	    existingBookCopy.setAvailable(dto.isAvailable());
-	    existingBookCopy.setCopyNumber(dto.getCopyNumber());
+	    // existingBookCopy.setCopyNumber(dto.getCopyNumber());
 	    
 	    service.update(existingBookCopy);
 	    return true;

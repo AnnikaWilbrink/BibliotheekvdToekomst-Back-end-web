@@ -2,6 +2,7 @@ package nl.workingtalent.wtlibrary.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,6 @@ public class BookService {
 	
 	public int findNrOfAvailableCopies(Book book) {
 		List<BookCopy> bookCopies = book.getBookcopies();
-		
 		int i=0;
 		for (BookCopy bookCopy : bookCopies) {
 			if (bookCopy.isAvailable()) {
@@ -64,4 +64,26 @@ public class BookService {
 		
 		return i;
 	}
+	
+    public boolean archiveBook(Long bookId) {
+        Optional<Book> bookOptional = repository.findById(bookId);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            book.setArchived(true);
+            repository.save(book);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean unarchiveBook(Long bookId) {
+        Optional<Book> bookOptional = repository.findById(bookId);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            book.setArchived(false);
+            repository.save(book);
+            return true;
+        }
+        return false;
+    }
 }

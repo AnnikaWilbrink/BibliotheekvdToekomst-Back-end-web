@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.dto.BorrowedBookDto;
+
 import nl.workingtalent.wtlibrary.dto.BorrowedBookTableDto;
 import nl.workingtalent.wtlibrary.dto.LendBorrowedBookDto;
 import nl.workingtalent.wtlibrary.model.BookCopy;
@@ -24,22 +26,32 @@ import nl.workingtalent.wtlibrary.service.UserService;
 import nl.workingtalent.wtlibrary.model.Reservation;
 import nl.workingtalent.wtlibrary.model.User;
 
+import nl.workingtalent.wtlibrary.dto.CreateBorrowedBookDto;
+import nl.workingtalent.wtlibrary.model.BookCopy;
+import nl.workingtalent.wtlibrary.model.BorrowedBook;
+import nl.workingtalent.wtlibrary.model.Reservation;
+import nl.workingtalent.wtlibrary.model.User;
+import nl.workingtalent.wtlibrary.service.BorrowedBookService;
+import nl.workingtalent.wtlibrary.service.BookCopyService;
+import nl.workingtalent.wtlibrary.service.ReservationService;
+import nl.workingtalent.wtlibrary.service.UserService;
+
 @RestController
 @CrossOrigin(maxAge = 3600)
 public class BorrowedBookController {
 
     @Autowired
     private BorrowedBookService service;
-    
+
     @Autowired
     private ReservationService reservationService;
-    
+
     @Autowired
     private BookService bookService;
-    
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private BookCopyService bookCopyService;
 
@@ -52,6 +64,9 @@ public class BorrowedBookController {
             BorrowedBookDto dto = new BorrowedBookDto();
             dto.setId(borrowedBook.getId());
             dto.setUserId(borrowedBook.getUser().getId());
+            dto.setUserFirstName(borrowedBook.getUser().getFirstName());
+            dto.setUserLastName(borrowedBook.getUser().getLastName());
+            dto.setBookTitle(borrowedBook.getBookTitle());
             dto.setBookCopyId(borrowedBook.getBookCopy().getId());
             dto.setBorrowDate(borrowedBook.getBorrowDate());
             dto.setReturnedDate(borrowedBook.getReturnedDate());
@@ -62,28 +77,26 @@ public class BorrowedBookController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "borrowed-book/save")
-    public boolean save(@RequestBody BorrowedBookDto dto) {
-        BorrowedBook borrowedBook = new BorrowedBook();
-        
-        // find the User by the id in the dto
-        Optional <User> userOptional = userService.findById(dto.getUserId());
+    public boolean save(@RequestBody CreateBorrowedBookDto dto) {
+        Optional<User> userOptional = userService.findById(dto.getUserId());
         if (userOptional.isEmpty()) {
-        	return false;
+            return false;
         }
         User user = userOptional.get();
-        
-        // find the BookCopy by the id in the dto
-        Optional <BookCopy> bookCopyOptional = bookCopyService.findById(dto.getBookCopyId());
+        Optional<BookCopy> bookCopyOptional = bookCopyService.findById(dto.getBookCopyId());
         if (bookCopyOptional.isEmpty()) {
-        	return false;
+            return false;
         }
         BookCopy bookCopy = bookCopyOptional.get();
-        
-        borrowedBook.setBorrowDate(dto.getBorrowDate());
-        borrowedBook.setReturnedDate(dto.getReturnedDate());
+
+        BorrowedBook borrowedBook = new BorrowedBook();
+
+        borrowedBook.setId(dto.getId());
+        borrowedBook.setBorrowDate(LocalDateTime.now());
+        borrowedBook.setReturnedDate(null);
         borrowedBook.setUser(user);
+        borrowedBook.setBookTitle(dto.getBookTitle());
         borrowedBook.setBookCopy(bookCopy);
-        
         service.save(borrowedBook);
         return true;
     }
@@ -96,6 +109,7 @@ public class BorrowedBookController {
             BorrowedBookDto dto = new BorrowedBookDto();
             dto.setId(borrowedBook.getId());
             dto.setUserId(borrowedBook.getUser().getId());
+            dto.setBookTitle(borrowedBook.getBookTitle());
             dto.setBookCopyId(borrowedBook.getBookCopy().getId());
             dto.setBorrowDate(borrowedBook.getBorrowDate());
             dto.setReturnedDate(borrowedBook.getReturnedDate());
@@ -111,10 +125,9 @@ public class BorrowedBookController {
         if (optional.isEmpty()) {
             return false;
         }
+        // Don't change this method's body or you'll break the return functionality :(
         BorrowedBook existingBorrowedBook = optional.get();
-        existingBorrowedBook.setBorrowDate(dto.getBorrowDate());
-        existingBorrowedBook.setReturnedDate(dto.getReturnedDate());
-        // TODO: Set user and bookCopy based on dto's userId and bookCopyId
+        existingBorrowedBook.setReturnedDate(LocalDateTime.now());
         service.update(existingBorrowedBook);
         return true;
     }
@@ -124,14 +137,13 @@ public class BorrowedBookController {
         service.deleteById(id);
         return true;
     }
-    
-    
+
     @PostMapping("borrowed-book/save/{id}")
     public @ResponseBody Map<String, Object> lendBook(@RequestBody LendBorrowedBookDto dto) {
         Map<String, Object> response = new HashMap<>();
-        
+
         Long reservationId = dto.getReservationId();
-        
+
         Optional<Reservation> optionalReservation = reservationService.findById(reservationId);
         if (optionalReservation.isEmpty()) {
             // Handle the case where the reservation is not found
@@ -140,9 +152,9 @@ public class BorrowedBookController {
             return response;
         }
         Reservation reservation = optionalReservation.get();
-        
+
         long bookId = reservation.getBook().getId();
-        
+
         // vind Book aan de hand van bookId
         Optional<Book> optionalBook = bookService.findById(bookId);
         if (optionalBook.isEmpty()) {
@@ -152,7 +164,7 @@ public class BorrowedBookController {
             return response;
         }
         Book book = optionalBook.get();
-        
+
         // Finding an available BookCopy for the given Book
         Optional<BookCopy> optionalBookCopy = service.availableCopy(book);
         if (optionalBookCopy.isEmpty()) {
@@ -161,46 +173,43 @@ public class BorrowedBookController {
             return response;
         }
         BookCopy bookCopy = optionalBookCopy.get();
-        
-        
+
         // find User aan de hand van userid in reservation
         Long userId = reservation.getUser().getId();
-        
+
         Optional<User> optionalUser = userService.findById(userId);
         if (optionalUser.isEmpty()) {
-        	// Handle the case where the user is not found
-        	response.put("success", false);
-        	response.put("message", "User not found");
-        	return response;
+            // Handle the case where the user is not found
+            response.put("success", false);
+            response.put("message", "User not found");
+            return response;
         }
         User user = optionalUser.get();
-        
+
         // Creating a new BorrowedBook record
         BorrowedBook borrowedBook = new BorrowedBook();
         borrowedBook.setBorrowDate(java.time.LocalDateTime.now()); // Setting the current date-time as borrow date
         borrowedBook.setBookCopy(bookCopy);
         borrowedBook.setUser(user);
         service.save(borrowedBook);
-        
-        
+
         response.put("success", true);
         response.put("bookCopyId", bookCopy.getId());
 
         return response;
     }
-    
-    
+
     @GetMapping("/user/borrowed-books-list")
     public List<BorrowedBookTableDto> getUserBorrowedBooks(HttpServletRequest request) {
         User user = (User) request.getAttribute("WT_USER");
-        
-        if(user == null) {
+
+        if (user == null) {
             throw new RuntimeException("User not found.");
         }
-        
+
         List<BorrowedBookTableDto> borrowedBookDTOs = service.findDtosByUser(user);
-        
+
         return borrowedBookDTOs;
     }
-    
+
 }

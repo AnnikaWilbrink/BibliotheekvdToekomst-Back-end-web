@@ -26,6 +26,9 @@ public class BorrowedBook {
 	
 	@Column(nullable = false)
 	private LocalDateTime borrowDate;
+
+	@Column(nullable = false)
+	private String bookTitle;
 	
 	// when the book is returned, this is updated,
 	// hence, no possession variable is necessary
@@ -72,5 +75,12 @@ public class BorrowedBook {
 		this.returnedDate = returnedDate;
 	}
 	
-	
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
+
 }

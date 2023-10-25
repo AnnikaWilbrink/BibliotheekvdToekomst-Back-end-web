@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import nl.workingtalent.wtlibrary.dto.BookArchiveDto;
 import nl.workingtalent.wtlibrary.dto.BookAvailabilityDto;
 import nl.workingtalent.wtlibrary.dto.BookDto;
 import nl.workingtalent.wtlibrary.dto.BookInfoDto;
@@ -25,19 +27,20 @@ import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.BookCopy;
 import nl.workingtalent.wtlibrary.service.BookCopyService;
 import nl.workingtalent.wtlibrary.service.BookService;
+import nl.workingtalent.wtlibrary.service.BookCopyService;
 
 @RestController
-@CrossOrigin(maxAge=3600)
+@CrossOrigin(maxAge = 3600)
 public class BookController {
-	
+
 	@Autowired
 	private BookService service;
-	
+
 	@Autowired
 	private BookCopyService bookCopyService;
-	
+
 	@RequestMapping("book/all")
-	public List<BookDto> findAllBooks(){
+	public List<BookDto> findAllBooks() {
 		// list Model -> list Dto
 		List<Book> dbBooks = service.findAll();
 		List<BookDto> dtos = new ArrayList<>();
@@ -50,95 +53,96 @@ public class BookController {
 			bookDto.setAuthor(dbBook.getAuthor());
 			bookDto.setSummary(dbBook.getSummary());
 			bookDto.setCoverUrl(dbBook.getCoverUrl());
-//			bookDto.setAvailablity(dbBook.getAvailablity());
+			// bookDto.setAvailablity(dbBook.getAvailablity());
 			bookDto.setSubject(dbBook.getSubject());
 			bookDto.setCategory(dbBook.getCategory());
-			//bookDto.setReviews(dbBook.getReviews());
+			bookDto.setArchived(dbBook.isArchived());
+			// bookDto.setReviews(dbBook.getReviews());
 
 			dtos.add(bookDto);
 		});
-		
+
 		return dtos;
 	}
-	
-	@RequestMapping(method = RequestMethod.POST, value="book/save")
+
+	@RequestMapping(method = RequestMethod.POST, value = "book/save")
 	public boolean save(@RequestBody SaveBookDto dto) {
 		// Dto -> Model
 		Book book = new Book();
 		book.setTitle(dto.getTitle());
 		book.setIsbn(dto.getIsbn());
 		book.setAuthor(dto.getAuthor());
-//		book.setAvailablity(dto.getAvailablity());
+		// book.setAvailablity(dto.getAvailablity());
 		book.setCategory(dto.getCategory());
 		book.setEdition(dto.getEdition());
 		book.setCoverUrl(dto.getCoverUrl());
 		book.setEdition(dto.getEdition());
 		book.setSubject(dto.getSubject());
 		book.setSummary(dto.getSummary());
-		
-//		service.save(book);
-//		return true;
-//		
+
+		// service.save(book);
+		// return true;
+		//
 		try {
-	        // Attempt to save the book
-	        service.save(book);
-	        return true;
-	    } catch (DataIntegrityViolationException e) {
-	        return false; 
-	    }
+			// Attempt to save the book
+			service.save(book);
+			return true;
+		} catch (DataIntegrityViolationException e) {
+			return false;
+		}
 	}
-	
+
 	@RequestMapping("book/{id}")
-	public Optional<Book> findById(@PathVariable long id){
+	public Optional<Book> findById(@PathVariable long id) {
 		return service.findById(id);
 	}
-	
-	@RequestMapping(method = RequestMethod.PUT, value="book/{id}")
-	public boolean update(@PathVariable long id, @RequestBody SaveBookDto dto) {
-	    Optional<Book> optional = service.findById(id);
-	    if(optional.isEmpty()) {
-	        return false;
-	    }
-	    Book existingBook = optional.get();
 
-	    existingBook.setTitle(dto.getTitle());
-	    existingBook.setIsbn(dto.getIsbn());
-	    existingBook.setAuthor(dto.getAuthor());
-//	    existingBook.setAvailablity(dto.getAvailablity());
-	    existingBook.setCategory(dto.getCategory());
+	@RequestMapping(method = RequestMethod.PUT, value = "book/{id}")
+	public boolean update(@PathVariable long id, @RequestBody SaveBookDto dto) {
+		Optional<Book> optional = service.findById(id);
+		if (optional.isEmpty()) {
+			return false;
+		}
+		Book existingBook = optional.get();
+
+		existingBook.setTitle(dto.getTitle());
+		existingBook.setIsbn(dto.getIsbn());
+		existingBook.setAuthor(dto.getAuthor());
+		existingBook.setAvailablity(dto.getAvailablity());
+		existingBook.setCategory(dto.getCategory());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
 		existingBook.setSubject(dto.getSubject());
 		existingBook.setSummary(dto.getSummary());
 
-	    service.update(existingBook);
-	    return true;
+		service.update(existingBook);
+		return true;
 	}
-	
+
 	public boolean delete(@PathVariable long id) {
 		service.delete(id);
 		return true;
 	}
-	
+
 	@RequestMapping("book/info/{id}")
-	public Optional<BookInfoDto> findInfoById(@PathVariable long id){
+	public Optional<BookInfoDto> findInfoById(@PathVariable long id) {
 		// find book by bookCopyId
 		Optional<BookCopy> optionalBookCopy = bookCopyService.findById(id);
-		if(optionalBookCopy.isEmpty()) {
+		if (optionalBookCopy.isEmpty()) {
 			return Optional.empty();
 		}
 		BookCopy bookCopy = optionalBookCopy.get();
-		
+
 		// Directly get the Book from the BookCopy. No need for Optional here.
-	    Book book = bookCopy.getBook();
-	    
-	    // If the book doesn't exist for some reason, return empty.
-	    if(book == null) {
-	        return Optional.empty();
-	    }
-		
+		Book book = bookCopy.getBook();
+
+		// If the book doesn't exist for some reason, return empty.
+		if (book == null) {
+			return Optional.empty();
+		}
+
 		BookInfoDto dto = new BookInfoDto();
-		
+
 		dto.setId(book.getId());
 		dto.setAuthor(book.getAuthor());
 		dto.setCategory(book.getCategory());
@@ -149,24 +153,24 @@ public class BookController {
 		dto.setTitle(book.getTitle());
 		dto.setAvailablity(book.getAvailablity());
 		dto.setEdition(book.getEdition());
-		
+
 		return Optional.of(dto);
 	}
-	
-//	@PostMapping("book/search")
-//	public List<Book> search(@RequestBody SearchBookDto dto ) {
-//		return service.search(dto.getSearchWord());
-//	}
+
+	// @PostMapping("book/search")
+	// public List<Book> search(@RequestBody SearchBookDto dto ) {
+	// return service.search(dto.getSearchWord());
+	// }
 
 	@PostMapping("book/filter")
-	public List<BookDto> filter(@RequestBody FilterBookDto dto ) {
+	public List<BookDto> filter(@RequestBody FilterBookDto dto) {
 		List<Book> books = service.filter(dto.getFilterWord(), dto.getCategories(), dto.getMinReviewScore());
-		
+
 		return books.stream().map(book -> {
 			BookDto bookDto = new BookDto();
-			
+
 			bookDto.setAuthor(book.getAuthor());
-			//bookDto.setAvailablity(book.getAvailablity());
+			// bookDto.setAvailablity(book.getAvailablity());
 			bookDto.setCategory(book.getCategory());
 			bookDto.setCoverUrl(book.getCoverUrl());
 			bookDto.setId(book.getId());
@@ -174,24 +178,51 @@ public class BookController {
 			bookDto.setSubject(book.getSubject());
 			bookDto.setSummary(book.getSummary());
 			bookDto.setTitle(book.getTitle());
-			
+
 			return bookDto;
 		}).collect(Collectors.toList());
 	}
-	
+
 	@GetMapping("book/availability/{id}")
 	public BookAvailabilityDto findAvailability(@PathVariable long id) {
 		BookAvailabilityDto dto = new BookAvailabilityDto();
-		
+
 		Optional<Book> optional = service.findById(id);
-		if(optional.isEmpty()) {
-	        return dto;
-	    }
+		if (optional.isEmpty()) {
+			return dto;
+		}
 		Book book = optional.get();
-		
+
 		dto.setNumberOfCopies(service.findNrOfCopies(book));
 		dto.setNumberOfAvailableCopies(service.findNrOfAvailableCopies(book));
-		
+		List<BookCopy> availableCopies = bookCopyService.findAvailableCopies(book);
+		ArrayList<Long> availableCopyIds = new ArrayList<>();
+		ArrayList<Long> availableCopyNrs = new ArrayList<>();
+		for (BookCopy bookCopy : availableCopies) {
+			availableCopyNrs.add(bookCopy.getCopyNumber());
+			availableCopyIds.add(bookCopy.getId());
+		}
+		dto.setAvailable(availableCopyNrs);
+		dto.setAvailableIds(availableCopyIds);
+		// dto.setAvailableCopies(bookCopyService.findAvailableCopies(book));
 		return dto;
+	}
+
+	@PutMapping("book/archive/{id}")
+	public BookArchiveDto archiveBook(@PathVariable long id) {
+		BookArchiveDto archived = new BookArchiveDto();
+		boolean isArchived = service.archiveBook(id);
+		archived.setArchived(isArchived);
+		return archived;
+
+	}
+
+	@PutMapping("book/unarchive/{id}")
+	public BookArchiveDto unarchiveBook(@PathVariable long id) {
+		BookArchiveDto archived = new BookArchiveDto();
+		boolean isArchived = service.unarchiveBook(id);
+		archived.setArchived(isArchived);
+		return archived;
+
 	}
 }
