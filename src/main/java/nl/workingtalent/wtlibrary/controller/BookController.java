@@ -129,6 +129,7 @@ public class BookController {
 		// find book by bookCopyId
 		Optional<BookCopy> optionalBookCopy = bookCopyService.findById(id);
 		if (optionalBookCopy.isEmpty()) {
+
 			return Optional.empty();
 		}
 		BookCopy bookCopy = optionalBookCopy.get();
@@ -157,10 +158,30 @@ public class BookController {
 		return Optional.of(dto);
 	}
 
-	// @PostMapping("book/search")
-	// public List<Book> search(@RequestBody SearchBookDto dto ) {
-	// return service.search(dto.getSearchWord());
-	// }
+	@RequestMapping("book/information/{id}")
+	public Optional<BookInfoDto> findBookInfoById(@PathVariable long id) {
+
+		Optional<Book> optional = service.findById(id);
+		if(optional.isEmpty()) {
+			return Optional.empty();
+	    }
+		Book book = optional.get();
+
+		BookInfoDto dto = new BookInfoDto();
+
+		dto.setId(book.getId());
+		dto.setAuthor(book.getAuthor());
+		dto.setCategory(book.getCategory());
+		dto.setCoverUrl(book.getCoverUrl());
+		dto.setIsbn(book.getIsbn());
+		dto.setSubject(book.getSubject());
+		dto.setSummary(book.getSummary());
+		dto.setTitle(book.getTitle());
+		dto.setAvailablity(book.getAvailablity());
+		dto.setEdition(book.getEdition());
+
+		return Optional.of(dto);
+	}
 
 	@PostMapping("book/filter")
 	public List<BookDto> filter(@RequestBody FilterBookDto dto ) {
