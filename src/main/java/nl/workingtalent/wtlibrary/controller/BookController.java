@@ -24,7 +24,9 @@ import nl.workingtalent.wtlibrary.dto.BookInfoDto;
 import nl.workingtalent.wtlibrary.dto.FilterBookDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookDto;
 import nl.workingtalent.wtlibrary.model.Book;
+import nl.workingtalent.wtlibrary.model.BookCopy;
 import nl.workingtalent.wtlibrary.service.BookService;
+import nl.workingtalent.wtlibrary.service.BookCopyService;
 
 @RestController
 @CrossOrigin(maxAge=3600)
@@ -32,6 +34,9 @@ public class BookController {
 	
 	@Autowired
 	private BookService service;
+
+	@Autowired
+	private BookCopyService bookCopyService;
 	
 	@RequestMapping("book/all")
 	public List<BookDto> findAllBooks(){
@@ -180,7 +185,16 @@ public class BookController {
 		
 		dto.setNumberOfCopies(service.findNrOfCopies(book));
 		dto.setNumberOfAvailableCopies(service.findNrOfAvailableCopies(book));
-		
+		List<BookCopy> availableCopies = bookCopyService.findAvailableCopies(book);
+		ArrayList<Long> availableCopyIds = new ArrayList<>();
+		ArrayList<Long> availableCopyNrs = new ArrayList<>();
+		for (BookCopy bookCopy : availableCopies) {
+			availableCopyNrs.add(bookCopy.getCopyNumber());
+			availableCopyIds.add(bookCopy.getId());
+			}
+		dto.setAvailable(availableCopyNrs);
+		dto.setAvailableIds(availableCopyIds);
+		//dto.setAvailableCopies(bookCopyService.findAvailableCopies(book));
 		return dto;
 	}
 	

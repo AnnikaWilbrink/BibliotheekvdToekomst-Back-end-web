@@ -2,6 +2,7 @@ package nl.workingtalent.wtlibrary.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,6 @@ public class BookService {
 	
 	public int findNrOfAvailableCopies(Book book) {
 		List<BookCopy> bookCopies = book.getBookcopies();
-		
 		int i=0;
 		for (BookCopy bookCopy : bookCopies) {
 			if (bookCopy.isAvailable()) {
