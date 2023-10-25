@@ -11,6 +11,7 @@ import nl.workingtalent.wtlibrary.dto.UserChangeEmailDto;
 import nl.workingtalent.wtlibrary.dto.UserChangePhoneNumberDto;
 import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.repository.IUserRepository;
+import nl.workingtalent.wtlibrary.service.PasswordHashingService;
 
 @Service
 public class UserService {
@@ -18,13 +19,17 @@ public class UserService {
 	@Autowired 
 	private IUserRepository repository;
 
+	@Autowired
+	private PasswordHashingService passwordHashingService;
+
 	public List<User> findAll(){
 		return repository.findAll();
 	}
 
 	public void save(User user) {
-		// Hash the password before saving the user
-//		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		String rawPassword = user.getPassword();
+        String hashedPassword = passwordHashingService.hashPassword(rawPassword);
+		user.setPassword(hashedPassword);
 		repository.save(user);
 	}
 
@@ -43,15 +48,19 @@ public class UserService {
 	}
 	
 	public Optional<User> authenticate(String email, String password) {
-		Optional<User> optional = repository.findByEmailAndPassword(email, password);
+		
+		Optional<User> optional = repository.findByEmail(email);
 		
 		if (optional.isPresent()) {
 			User user = optional.get();
-			user.setToken(generateToken());
-			repository.save(user);
+			String storedHashedPassword = user.getPassword();
+			if (passwordHashingService.verifyPassword(password, storedHashedPassword)) {
+				user.setToken(generateToken());
+				repository.save(user);
+				return optional;
 		}
-
-		return optional;
+	}
+	return Optional.empty();	
 	}
 	
 	private String generateToken() {
@@ -75,13 +84,16 @@ public class UserService {
 			return false;
 		}
 
-		if (!user.getPassword().equals(currentPassword)) {
-			return false;
+		String storedHashedPassword = user.getPassword();
+
+		if (passwordHashingService.verifyPassword(currentPassword, storedHashedPassword)) {
+			String newHashedPassword = passwordHashingService.hashPassword(newPassword);
+			user.setPassword(newHashedPassword);
+			repository.save(user);
+			return true;
 		}
 
-		user.setPassword(newPassword);
-		repository.save(user);
-		return true;
+		return false;
 	}
 	
 	public boolean changeEmail(User user, UserChangeEmailDto dto) {
