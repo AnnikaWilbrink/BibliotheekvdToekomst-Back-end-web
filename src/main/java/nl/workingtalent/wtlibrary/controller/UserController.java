@@ -216,5 +216,51 @@ public class UserController {
 	    return new ResponseEntity<>("User information deleted successfully", HttpStatus.OK);
 	}
 	
+	
+	@GetMapping("user/role/{role}")
+	public List<UserDto> findUsersByRole(@PathVariable String role) {
+	    // Using the service method to fetch users by the given role
+	    Iterable<User> users = service.findAllUsersByRole(role);
+	    List<UserDto> dtos = new ArrayList<>();
+
+	    users.forEach(user -> {
+	        UserDto dto = new UserDto();
+	        dto.setId(user.getId());
+	        dto.setFirstName(user.getFirstName());
+	        dto.setLastName(user.getLastName());
+	        dto.setRole(user.getRole());
+	        dto.setEmail(user.getEmail());
+	        dto.setPhoneNumber(user.getPhoneNumber());
+
+	        dtos.add(dto);
+	    });
+
+	    return dtos;
+	}
+	
+	
+	
+	@RequestMapping(method = RequestMethod.DELETE, value = "user/adminDelete/{id}")
+	public ResponseEntity<?> adminDelete(@PathVariable long id, HttpServletRequest request) {
+	    // Extract the token from the request header
+		User user = (User) request.getAttribute("WT_USER");
+
+	    if (user == null) {
+	        // Token is invalid or user not found
+	        return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+	    }
+	    
+
+	    if (!"admin".equalsIgnoreCase(user.getRole())) {
+	        // User is not an admin
+	        return new ResponseEntity<>("Unauthorized", HttpStatus.FORBIDDEN);
+	    }
+
+	    // If we've reached this point, the user is an admin. Proceed with the deletion.
+	    service.delete(id);
+	    return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+	}
+	
+	
 
 }

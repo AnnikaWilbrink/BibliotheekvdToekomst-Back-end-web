@@ -1,5 +1,6 @@
 package nl.workingtalent.wtlibrary.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,7 @@ public interface IUserRepository extends JpaRepository<User, Long>{
 	boolean existsByPhoneNumber(String phoneNumber);
 	
 	Optional<User> findByToken(String token);
+	
+	List<User> findByRole(String role);
 	
 }

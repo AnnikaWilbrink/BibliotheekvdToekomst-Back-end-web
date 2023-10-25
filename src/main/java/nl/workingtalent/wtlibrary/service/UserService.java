@@ -125,4 +125,10 @@ public class UserService {
 		repository.save(user);
 		return true;
 	}
+	
+	public List<User> findAllUsersByRole(String role) {
+	    // Use a repository method to fetch users by role.
+	    // If you're using Spring Data JPA, it could be a method like `findByRole(String role)`.
+	    return repository.findByRole(role);
+	}
 }
