@@ -22,6 +22,8 @@ import nl.workingtalent.wtlibrary.dto.BookInfoDto;
 import nl.workingtalent.wtlibrary.dto.FilterBookDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookDto;
 import nl.workingtalent.wtlibrary.model.Book;
+import nl.workingtalent.wtlibrary.model.BookCopy;
+import nl.workingtalent.wtlibrary.service.BookCopyService;
 import nl.workingtalent.wtlibrary.service.BookService;
 
 @RestController
@@ -30,6 +32,9 @@ public class BookController {
 	
 	@Autowired
 	private BookService service;
+	
+	@Autowired
+	private BookCopyService bookCopyService;
 	
 	@RequestMapping("book/all")
 	public List<BookDto> findAllBooks(){
@@ -117,11 +122,20 @@ public class BookController {
 	
 	@RequestMapping("book/info/{id}")
 	public Optional<BookInfoDto> findInfoById(@PathVariable long id){
-		Optional<Book> optional = service.findById(id);
-		if(optional.isEmpty()) {
+		// find book by bookCopyId
+		Optional<BookCopy> optionalBookCopy = bookCopyService.findById(id);
+		if(optionalBookCopy.isEmpty()) {
+			return Optional.empty();
+		}
+		BookCopy bookCopy = optionalBookCopy.get();
+		
+		// Directly get the Book from the BookCopy. No need for Optional here.
+	    Book book = bookCopy.getBook();
+	    
+	    // If the book doesn't exist for some reason, return empty.
+	    if(book == null) {
 	        return Optional.empty();
 	    }
-		Book book = optional.get();
 		
 		BookInfoDto dto = new BookInfoDto();
 		
