@@ -1,5 +1,5 @@
 package nl.workingtalent.wtlibrary.model;
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; 
 
 
 import jakarta.persistence.GeneratedValue;
@@ -8,8 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "borrowed_book")
 public class BorrowedBook {
 
 	@Id
@@ -24,6 +26,9 @@ public class BorrowedBook {
 	
 	@Column(nullable = false)
 	private LocalDateTime borrowDate;
+
+	@Column(nullable = false)
+	private String bookTitle;
 	
 	// when the book is returned, this is updated,
 	// hence, no possession variable is necessary
@@ -70,5 +75,12 @@ public class BorrowedBook {
 		this.returnedDate = returnedDate;
 	}
 	
-	
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
+
 }

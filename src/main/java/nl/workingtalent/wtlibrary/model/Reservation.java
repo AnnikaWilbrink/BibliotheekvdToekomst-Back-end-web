@@ -25,6 +25,9 @@ public class Reservation {
 	@Column(nullable = false)
 	private boolean deleted;
 
+	@Column(nullable = false)
+	private boolean borrowed;
+
 	@ManyToOne
 	private User user;
 
@@ -78,5 +81,13 @@ public class Reservation {
 	public void setBook(Book book) {
 		this.book = book;
 	}
+
+    public boolean isBorrowed() {
+        return borrowed;
+    }
+
+    public void setBorrowed(boolean borrowed) {
+        this.borrowed = borrowed;
+    }
 
 }

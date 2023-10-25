@@ -59,6 +59,11 @@ public class UserController {
 		User user = new User();
 		user.setFirstName(dto.getFirstName());
 		user.setLastName(dto.getLastName());
+		if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+			user.setPassword(dto.getPassword()); 
+		} else {
+			return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+		}
 		user.setPassword(dto.getPassword()); // Consider hashing before saving
 		user.setRole(dto.getRole());
 		user.setEmail(dto.getEmail());
@@ -180,8 +185,6 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.PUT, value = "user/changePhoneNumber")
 	public ResponseEntity<?> changePhoneNumber(@RequestBody UserChangePhoneNumberDto dto, HttpServletRequest request) {
 	    User user = (User) request.getAttribute("WT_USER");
-	    
-	    System.out.println(user); // check
 
 	    if (user == null) {
 	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
@@ -195,5 +198,23 @@ public class UserController {
 	    }
 	}
 
+	
+	// function to delete ALL user data
+	@RequestMapping(method = RequestMethod.POST, value = "user/deleteUser")
+	public ResponseEntity<?> deleteCurrentUser(@RequestBody UserLoginDto dto, HttpServletRequest request) {
+	    User loggedInUser = (User) request.getAttribute("WT_USER");
+	    
+	    // If no user is logged in, reject the request
+	    if (loggedInUser == null) {
+	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+	    }
+
+	    // Deleting the current logged-in user
+	    // The other data, like reviews will automatically also be deleted (cascade)
+	    service.delete(loggedInUser.getId());
+
+	    return new ResponseEntity<>("User information deleted successfully", HttpStatus.OK);
+	}
+	
 
 }

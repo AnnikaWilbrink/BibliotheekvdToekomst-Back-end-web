@@ -38,4 +38,8 @@ public class BookCopyService {
 	public void update(BookCopy bookCopy) {
 		repository.save(bookCopy);
 	}
+
+	public List<BookCopy> findAvailableCopies(Book book){
+		return repository.findByAvailableAndBook(true, book);
+	}
 }
