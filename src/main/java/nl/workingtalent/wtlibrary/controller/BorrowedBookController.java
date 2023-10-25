@@ -105,6 +105,7 @@ public class BorrowedBookController {
         if (optional.isEmpty()) {
             return false;
         }
+        // Don't change this method's body or you'll break the return functionality :(
         BorrowedBook existingBorrowedBook = optional.get();
         existingBorrowedBook.setReturnedDate(LocalDateTime.now());
         service.update(existingBorrowedBook);
