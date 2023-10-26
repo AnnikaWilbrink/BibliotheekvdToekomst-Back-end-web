@@ -1,6 +1,6 @@
 package nl.workingtalent.wtlibrary.dto;
 
-public class SaveBookDto {
+public class UpdateBookDto {
 
 	private String title;
 	
@@ -17,6 +17,8 @@ public class SaveBookDto {
     private String edition;
     
     private String coverUrl;
+    
+    private String availability;
 
 	public String getTitle() {
 		return title;
@@ -80,6 +82,14 @@ public class SaveBookDto {
 
 	public void setCoverUrl(String coverUrl) {
 		this.coverUrl = coverUrl;
+	}
+
+	public String getAvailability() {
+		return availability;
+	}
+
+	public void setAvailability(String availability) {
+		this.availability = availability;
 	}
 	
 }
