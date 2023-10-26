@@ -86,7 +86,28 @@ public class ReviewController {
             dto.setUserId(review.getUser().getId());
             dto.setText(review.getText());
             dto.setStars(review.getStars());
- 
+
+            dtos.add(dto);
+        });
+        
+        return dtos;
+    }
+
+    @GetMapping("review/user/{id}")
+    public List<ReviewDto> findAllForThisUser(@PathVariable long id, HttpServletRequest request) {
+        List<ReviewDto> dtos = new ArrayList<>();
+        
+        List<Review> reviews = reviewService.findAllByUserId(id);
+        
+        reviews.forEach(review -> {
+            ReviewDto dto = new ReviewDto();
+            dto.setId(review.getId());
+            dto.setBookId(review.getBook().getId());
+            dto.setBookTitle(review.getBook().getTitle());
+            dto.setUserId(review.getUser().getId());
+            dto.setText(review.getText());
+            dto.setStars(review.getStars());
+
             dtos.add(dto);
         });
         
@@ -133,7 +154,7 @@ public class ReviewController {
     		return Optional.empty();
     	}
     	
-    	if (loggedInUser.isAdmin()) {
+    	// if (loggedInUser.isAdmin()) {
     		Optional<Review> optional = reviewService.findById(id);
             if(optional.isPresent()) {
                 Review review = optional.get();
@@ -145,7 +166,7 @@ public class ReviewController {
                 dto.setStars(review.getStars());
                 
                 return Optional.of(dto);
-            }
+            // }
     	}
         
         return Optional.empty();

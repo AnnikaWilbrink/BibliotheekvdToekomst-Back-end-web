@@ -1,6 +1,6 @@
 package nl.workingtalent.wtlibrary.controller;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,23 +30,23 @@ import nl.workingtalent.wtlibrary.service.ReservationService;
 import nl.workingtalent.wtlibrary.service.UserService;
 
 @RestController
-@CrossOrigin(maxAge=3600)
+@CrossOrigin(maxAge = 3600)
 public class ReservationController {
-    
+
     @Autowired
     private ReservationService service;
-    
+
     @Autowired
     private BookService bookService;
-    
+
     @Autowired
     private UserService userService;
-    
+
     @RequestMapping("reservation/all")
     public List<ReservationDto> findAllReservations() {
         Iterable<Reservation> reservations = service.findAll();
         List<ReservationDto> dtos = new ArrayList<>();
-        
+
         reservations.forEach(reservation -> {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
@@ -61,16 +61,16 @@ public class ReservationController {
             dto.setBookId(reservation.getBook().getId());
             dtos.add(dto);
         });
-        
+
         return dtos;
     }
 
     @RequestMapping("reservation/all/{id}")
     public List<ReservationDto> findPersonsReservations(@PathVariable long id, HttpServletRequest request) {
-        
+
         List<Reservation> reservations = service.findAllByUserId(id);
         List<ReservationDto> dtos = new ArrayList<>();
-        
+
         reservations.forEach(reservation -> {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
@@ -83,42 +83,41 @@ public class ReservationController {
             dto.setUserLastName(reservation.getUser().getLastName());
             dtos.add(dto);
         });
-        
+
         return dtos;
     }
 
-    
-    @PostMapping(value="reservation/save")
+    @PostMapping(value = "reservation/save")
     public boolean save(@RequestBody SaveReservationDto dto) {
         // ToDo: authorization maken met httpservlet
-    	
+
         Optional<User> userOptional = userService.findById(dto.getUserId());
         if (userOptional.isEmpty()) {
-        	return false;
+            return false;
         }
         User user = userOptional.get();
-        
+
         Optional<Book> bookOptional = bookService.findById(dto.getBookId());
         if (bookOptional.isEmpty()) {
             return false;
         }
         Book book = bookOptional.get();
-        
+
         Reservation reservation = new Reservation();
         reservation.setBook(book);
         reservation.setUser(user);
-        //reservation.setReservationDate(dto.getReservationDate());
+        // reservation.setReservationDate(dto.getReservationDate());
         reservation.setApproved(user.isAdmin());
         reservation.setDeleted(false);
         reservation.setBorrowed(false);
         service.save(reservation);
         return true;
     }
-    
+
     @RequestMapping("reservation/{id}")
     public Optional<ReservationDto> findById(@PathVariable long id) {
         Optional<Reservation> optional = service.findById(id);
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             Reservation reservation = optional.get();
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
@@ -133,14 +132,14 @@ public class ReservationController {
             dto.setBookId(reservation.getBook().getId());
             return Optional.of(dto);
         }
-        
+
         return Optional.empty();
     }
-    
-    @RequestMapping(method = RequestMethod.PUT, value="reservation/{id}")
+
+    @RequestMapping(method = RequestMethod.PUT, value = "reservation/{id}")
     public boolean update(@PathVariable long id, @RequestBody SaveReservationDto dto) {
         Optional<Reservation> optional = service.findById(id);
-        if(optional.isEmpty()) {
+        if (optional.isEmpty()) {
             return false;
         }
         Reservation existingReservation = optional.get();
@@ -149,39 +148,44 @@ public class ReservationController {
         existingReservation.setDeleted(dto.isDeleted());
         existingReservation.setBorrowed(dto.isBorrowed());
         service.update(existingReservation);
-        return true; 
+        return true;
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value="reservation/{id}")
-    public boolean deleteById(@PathVariable long id) {
-    	service.deleteById(id);
-    	return true;
+    @RequestMapping(method = RequestMethod.PUT, value = "reservation/delete")
+    public boolean delete(@RequestBody SaveReservationDto dto) {
+        Optional<User> userOptional = userService.findById(dto.getUserId());
+        Optional<Book> bookOptional = bookService.findById(dto.getBookId());
+
+        User user = userOptional.get();
+        Book book = bookOptional.get();
+
+        Reservation reservation = service.findByUserIdAndBookId(user.getId(), book.getId());
+
+        reservation.setDeleted(dto.isDeleted());
+        service.update(reservation);
+        return true;
     }
-    
+
     @GetMapping("/user/current-reservations")
     public List<ReservationUserTableDto> getCurrentReservationsForUser(HttpServletRequest request) {
-    	User user = (User) request.getAttribute("WT_USER");
-    	
-    	if (user == null) {
+        User user = (User) request.getAttribute("WT_USER");
+
+        if (user == null) {
             throw new RuntimeException("User not found.");
         }
-    	
+
         List<Reservation> reservations = service.findAllActiveByUserId(user.getId());
 
         return reservations.stream()
-                           .map(this::convertToReservationUserTableDto)
-                           .collect(Collectors.toList());
+                .map(this::convertToReservationUserTableDto)
+                .collect(Collectors.toList());
     }
 
     private ReservationUserTableDto convertToReservationUserTableDto(Reservation reservation) {
-    	ReservationUserTableDto dto = new ReservationUserTableDto();
+        ReservationUserTableDto dto = new ReservationUserTableDto();
         dto.setBookTitle(reservation.getBook().getTitle());
         dto.setReservationDate(reservation.getReservationDate());
         dto.setApproved(reservation.isApproved());
         return dto;
     }
-    
-    
-    
-
 }
