@@ -6,7 +6,8 @@ public class ReviewDto {
     private long bookId;
 	private String bookTitle;
 	private long userId;
-    private String text;
+	private String userFirstName;
+	private String text;
     private int stars;
 	public long getId() {
 		return id;
@@ -31,6 +32,12 @@ public class ReviewDto {
 	}
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+	public String getUserFirstName() {
+		return userFirstName;
+	}
+	public void setUserFirstName(String userFirstName) {
+		this.userFirstName = userFirstName;
 	}
 	public String getText() {
 		return text;
