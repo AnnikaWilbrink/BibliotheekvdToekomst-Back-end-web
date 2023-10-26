@@ -14,7 +14,7 @@ public class BookDto {
 
 	private String coverUrl;
 
-	private String availablity;
+	private String availability;
 
 	private String reviews; // TODO: dit moet een list zijn toch?
 	
@@ -90,12 +90,12 @@ public class BookDto {
 		this.coverUrl = coverUrl;
 	}
 
-	public String getAvailablity() {
-		return availablity;
+	public String getAvailability() {
+		return availability;
 	}
 
-	public void setAvailablity(String availablity) {
-		this.availablity = availablity;
+	public void setAvailability(String availability) {
+		this.availability = availability;
 	}
 
 	public String getReviews() {
