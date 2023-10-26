@@ -9,6 +9,7 @@ public class BorrowedBookDto {
     private long bookCopyId;
     private String userFirstName;
     private String userLastName;
+    private String userEmail;
     private String bookTitle;
     private LocalDateTime borrowDate;
     private LocalDateTime returnedDate;
@@ -76,6 +77,14 @@ public class BorrowedBookDto {
 
     public void setBookTitle(String bookTitle) {
         this.bookTitle = bookTitle;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
 }

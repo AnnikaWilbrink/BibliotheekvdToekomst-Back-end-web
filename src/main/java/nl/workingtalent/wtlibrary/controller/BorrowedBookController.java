@@ -66,6 +66,7 @@ public class BorrowedBookController {
             dto.setUserId(borrowedBook.getUser().getId());
             dto.setUserFirstName(borrowedBook.getUser().getFirstName());
             dto.setUserLastName(borrowedBook.getUser().getLastName());
+            dto.setUserEmail(borrowedBook.getUser().getEmail());
             dto.setBookTitle(borrowedBook.getBookTitle());
             dto.setBookCopyId(borrowedBook.getBookCopy().getId());
             dto.setBorrowDate(borrowedBook.getBorrowDate());
@@ -109,6 +110,7 @@ public class BorrowedBookController {
             BorrowedBookDto dto = new BorrowedBookDto();
             dto.setId(borrowedBook.getId());
             dto.setUserId(borrowedBook.getUser().getId());
+            dto.setUserEmail(borrowedBook.getUser().getEmail());
             dto.setBookTitle(borrowedBook.getBookTitle());
             dto.setBookCopyId(borrowedBook.getBookCopy().getId());
             dto.setBorrowDate(borrowedBook.getBorrowDate());
