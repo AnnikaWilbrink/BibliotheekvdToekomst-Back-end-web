@@ -17,5 +17,7 @@ public interface IUserRepository extends JpaRepository<User, Long>{
 	boolean existsByPhoneNumber(String phoneNumber);
 	
 	Optional<User> findByToken(String token);
+
+	Optional<User> findByIdAndTokenAndRole(long id, String token, String role);
 	
 }
