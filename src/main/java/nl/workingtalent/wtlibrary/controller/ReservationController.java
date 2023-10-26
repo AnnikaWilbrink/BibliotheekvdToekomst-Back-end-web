@@ -71,6 +71,8 @@ public class ReservationController {
         reservations.forEach(reservation -> {
             ReservationDto dto = new ReservationDto();
             dto.setId(reservation.getId());
+            dto.setBookId(reservation.getBook().getId());
+            dto.setUserId(id);
             dto.setReservationDate(reservation.getReservationDate());
             dto.setApproved(reservation.isApproved());
             dto.setDeleted(reservation.isDeleted());
