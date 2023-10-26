@@ -16,7 +16,7 @@ public class BookInfoDto {
 	
 	private String subject;
 	
-	private String availablity;
+	private String availability;
 
 	private String category;
 	
@@ -78,12 +78,12 @@ public class BookInfoDto {
 		this.subject = subject;
 	}
 
-	public String getAvailablity() {
-		return availablity;
+	public String getAvailability() {
+		return availability;
 	}
 
-	public void setAvailablity(String availablity) {
-		this.availablity = availablity;
+	public void setAvailability(String availability) {
+		this.availability = availability;
 	}
 
 	public String getCategory() {
