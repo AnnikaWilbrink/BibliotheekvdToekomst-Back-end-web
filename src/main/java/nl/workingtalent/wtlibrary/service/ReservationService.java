@@ -45,7 +45,7 @@ public class ReservationService {
 	}
 	
 	public List<Reservation> findAllActiveByUserId(long userId) {
-	    return repository.findByUserIdAndDeletedFalse(userId);
+	    return repository.findByUserIdAndDeletedFalseAndBorrowedFalse(userId);
 	}
 	
 }

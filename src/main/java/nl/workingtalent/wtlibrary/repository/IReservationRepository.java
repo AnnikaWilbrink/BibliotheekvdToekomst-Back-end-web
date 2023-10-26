@@ -9,6 +9,6 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
 
     List<Reservation> findByUserId(Long userId);
     Reservation findByUserIdAndBookId(Long userId, Long bookId);
-    List<Reservation> findByUserIdAndDeletedFalse(Long userId);
+    List<Reservation> findByUserIdAndDeletedFalseAndBorrowedFalse(Long userId);
     
 }
