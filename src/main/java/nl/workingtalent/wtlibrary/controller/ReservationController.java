@@ -3,10 +3,12 @@ package nl.workingtalent.wtlibrary.controller;
 import java.util.ArrayList; 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import nl.workingtalent.wtlibrary.dto.FavoriteDto;
 import nl.workingtalent.wtlibrary.dto.ReservationDto;
+import nl.workingtalent.wtlibrary.dto.ReservationUserTableDto;
 import nl.workingtalent.wtlibrary.dto.SaveReservationDto;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.Favorite;
@@ -154,5 +157,31 @@ public class ReservationController {
     	service.deleteById(id);
     	return true;
     }
+    
+    @GetMapping("/user/current-reservations")
+    public List<ReservationUserTableDto> getCurrentReservationsForUser(HttpServletRequest request) {
+    	User user = (User) request.getAttribute("WT_USER");
+    	
+    	if (user == null) {
+            throw new RuntimeException("User not found.");
+        }
+    	
+        List<Reservation> reservations = service.findAllActiveByUserId(user.getId());
+
+        return reservations.stream()
+                           .map(this::convertToReservationUserTableDto)
+                           .collect(Collectors.toList());
+    }
+
+    private ReservationUserTableDto convertToReservationUserTableDto(Reservation reservation) {
+    	ReservationUserTableDto dto = new ReservationUserTableDto();
+        dto.setBookTitle(reservation.getBook().getTitle());
+        dto.setReservationDate(reservation.getReservationDate());
+        dto.setApproved(reservation.isApproved());
+        return dto;
+    }
+    
+    
+    
 
 }
