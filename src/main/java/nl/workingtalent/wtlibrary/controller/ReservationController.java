@@ -149,10 +149,20 @@ public class ReservationController {
         return true; 
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value="reservation/{id}")
-    public boolean deleteById(@PathVariable long id) {
-    	service.deleteById(id);
-    	return true;
+    @RequestMapping(method = RequestMethod.PUT, value="reservation/delete")
+    public boolean delete(@RequestBody SaveReservationDto dto) {
+        Optional <User> userOptional = userService.findById(dto.getUserId());
+    	Optional<Book> bookOptional = bookService.findById(dto.getBookId());
+    	
+    	User user = userOptional.get();
+    	Book book = bookOptional.get();
+
+        Reservation reservation = service.findByUserIdAndBookId(user.getId(), book.getId());
+
+        reservation.setDeleted(dto.isDeleted());
+        service.update(reservation);
+        return true; 
     }
+    
 
 }
