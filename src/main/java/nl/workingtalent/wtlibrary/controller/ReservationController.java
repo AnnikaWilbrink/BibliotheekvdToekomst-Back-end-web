@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+import nl.workingtalent.wtlibrary.dto.FavoriteDto;
 import nl.workingtalent.wtlibrary.dto.ReservationDto;
 import nl.workingtalent.wtlibrary.dto.SaveReservationDto;
 import nl.workingtalent.wtlibrary.model.Book;
+import nl.workingtalent.wtlibrary.model.Favorite;
 import nl.workingtalent.wtlibrary.model.Reservation;
 import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.service.BookService;
@@ -57,6 +61,29 @@ public class ReservationController {
         
         return dtos;
     }
+
+    @RequestMapping("reservation/all/{id}")
+    public List<ReservationDto> findPersonsReservations(@PathVariable long id, HttpServletRequest request) {
+        
+        List<Reservation> reservations = service.findAllByUserId(id);
+        List<ReservationDto> dtos = new ArrayList<>();
+        
+        reservations.forEach(reservation -> {
+            ReservationDto dto = new ReservationDto();
+            dto.setId(reservation.getId());
+            dto.setBookId(reservation.getBook().getId());
+            dto.setUserId(id);
+            dto.setReservationDate(reservation.getReservationDate());
+            dto.setApproved(reservation.isApproved());
+            dto.setDeleted(reservation.isDeleted());
+            dto.setUserFirstName(reservation.getUser().getFirstName());
+            dto.setUserLastName(reservation.getUser().getLastName());
+            dtos.add(dto);
+        });
+        
+        return dtos;
+    }
+
     
     @PostMapping(value="reservation/save")
     public boolean save(@RequestBody SaveReservationDto dto) {
@@ -77,7 +104,7 @@ public class ReservationController {
         Reservation reservation = new Reservation();
         reservation.setBook(book);
         reservation.setUser(user);
-        reservation.setReservationDate(dto.getReservationDate());
+        //reservation.setReservationDate(dto.getReservationDate());
         reservation.setApproved(user.isAdmin());
         reservation.setDeleted(false);
         reservation.setBorrowed(false);
@@ -127,4 +154,5 @@ public class ReservationController {
     	service.deleteById(id);
     	return true;
     }
+
 }
