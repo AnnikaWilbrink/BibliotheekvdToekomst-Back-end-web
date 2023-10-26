@@ -44,4 +44,8 @@ public class ReservationService {
 		repository.save(reservation);
 	}
 	
+	public List<Reservation> findAllActiveByUserId(long userId) {
+	    return repository.findByUserIdAndDeletedFalse(userId);
+	}
+	
 }

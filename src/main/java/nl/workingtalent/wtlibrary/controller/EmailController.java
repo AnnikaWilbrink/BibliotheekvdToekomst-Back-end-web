@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 @RestController
 public class EmailController {
 
-    
+     
+	
 
     @Autowired
     private EmailService service;
