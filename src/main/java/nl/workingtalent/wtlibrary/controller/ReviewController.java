@@ -84,6 +84,7 @@ public class ReviewController {
             dto.setId(review.getId());
             dto.setBookId(review.getBook().getId());
             dto.setUserId(review.getUser().getId());
+            dto.setUserFirstName(review.getUser().getFirstName());
             dto.setText(review.getText());
             dto.setStars(review.getStars());
 
