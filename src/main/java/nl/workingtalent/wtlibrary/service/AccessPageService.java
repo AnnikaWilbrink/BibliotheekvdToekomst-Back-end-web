@@ -14,7 +14,8 @@ public class AccessPageService {
     @Autowired
     private IUserRepository repository;
 
-    @Autowired UserService service;
+    @Autowired 
+    private UserService service;
 
     public boolean hasPermissionToAccessPage(String role, String token, long userId) {
         Optional<User> optional = repository.findByIdAndTokenAndRole(userId, token, role);
