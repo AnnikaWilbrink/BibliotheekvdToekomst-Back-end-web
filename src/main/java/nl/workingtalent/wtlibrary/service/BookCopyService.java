@@ -31,6 +31,15 @@ public class BookCopyService {
 		return repository.findById(id);
 	}
 	
+//	public Long findHighestCopyNumber() {
+//		BookCopy bookCopy = repository.findTopByOrderByCopyNumberDesc();
+//		if (bookCopy != null) {
+//            return bookCopy.getCopyNumber();
+//        } else {
+//            return 0;
+//        }
+//    }
+	
 	public void deleteById(long id) {
 		repository.deleteById(id);
 	}

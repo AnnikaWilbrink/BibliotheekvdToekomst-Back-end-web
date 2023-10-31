@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +20,7 @@ import nl.workingtalent.wtlibrary.dto.BookCopyDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookCopyDto;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.BookCopy;
+import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.service.BookCopyService;
 import nl.workingtalent.wtlibrary.service.BookService;
 
@@ -71,13 +74,19 @@ public class BookCopyController {
         return dtos;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="bookcopy/save")
+	@PostMapping("bookcopy/save")
 	public boolean save(@RequestBody SaveBookCopyDto dto) {
-	    BookCopy bookCopy = new BookCopy();
-	    bookCopy.setAvailable(dto.isAvailable());
-	    bookCopy.setCopyNumber(dto.getCopyNumber());
+		Optional<Book> bookOptional = bookService.findById(dto.getBook());
+		if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            
+		    BookCopy bookCopy = new BookCopy();
+		    bookCopy.setAvailable(dto.isAvailable());
+		    bookCopy.setCopyNumber(dto.getCopyNumber());
+		    bookCopy.setBook(book);
 	    
-	    service.save(bookCopy);
+		    service.save(bookCopy);
+		}
 	    return true;
 	}
 	
@@ -100,5 +109,15 @@ public class BookCopyController {
 	    service.update(existingBookCopy);
 	    return true;
 	}
+	
+//	@GetMapping("/highest-copy-number")
+//    public ResponseEntity<Long> getHighestCopyNumber() {
+//        Long highestCopyNumber = service.findHighestCopyNumber();
+//        if (highestCopyNumber != null) {
+//            return ResponseEntity.ok(highestCopyNumber);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
 }

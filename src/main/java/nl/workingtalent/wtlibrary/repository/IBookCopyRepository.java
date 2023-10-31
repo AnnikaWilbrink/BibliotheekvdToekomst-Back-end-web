@@ -16,4 +16,6 @@ public interface IBookCopyRepository extends JpaRepository<BookCopy, Long> {
 	List<BookCopy> findByBook(Book book);
 
     List<BookCopy> findByAvailableAndBook(boolean available, Book book);
+    
+    Long findTopByOrderByCopyNumberDesc();
 }
