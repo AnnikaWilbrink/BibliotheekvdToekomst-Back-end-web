@@ -12,6 +12,26 @@ public class FilterBookDto {
 
 	private Integer minReviewScore;
 
+	private String sortField;
+
+	private String sortOrder;
+
+	public String getSortField() {
+		return sortField;
+	}
+
+	public void setSortField(String sortField) {
+		this.sortField = sortField;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
 	public String getFilterWord() {
 		return filterWord;
 	}

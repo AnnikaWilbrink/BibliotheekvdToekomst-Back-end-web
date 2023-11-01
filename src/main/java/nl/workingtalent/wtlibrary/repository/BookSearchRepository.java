@@ -23,7 +23,7 @@ public class BookSearchRepository {
 	@Autowired
 	private EntityManager em;
 
-	public List<Book> search(String filterWord, List<String> isCategory, List<String> hasSubject, Integer minReviewScore) {
+	public List<Book> search(String filterWord, List<String> isCategory, List<String> hasSubject, Integer minReviewScore, String sortField, String sortOrder) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Book> cq = cb.createQuery(Book.class);
 
@@ -40,10 +40,15 @@ public class BookSearchRepository {
         }
 
         if (isCategory != null && !isCategory.isEmpty()) {
+			List<Predicate> searchCategoryPredicates = new ArrayList<>();
+
 			for (String i : isCategory) {
 				Predicate searchCategoryPredicate = cb.equal(book.get("category"), i);
-				predicates.add(searchCategoryPredicate);
+				searchCategoryPredicates.add(searchCategoryPredicate);
 			}
+
+			Predicate categoryPredicates = cb.or(searchCategoryPredicates);
+        	predicates.add(categoryPredicates);
 			
 		}
 
@@ -66,11 +71,23 @@ public class BookSearchRepository {
 	        Predicate finalQuery = cb.and(predicates.toArray(new Predicate[] {}));
 	        cq.where(finalQuery);
         }
-        cq.orderBy(cb.asc(book.get("title")));
+        
+
+		//cq.orderBy(cb.asc(book.get("title")));
+
+		// Sorting logic
+		if (sortField != null && sortOrder != null) {
+			if (sortOrder.equalsIgnoreCase("asc")) {
+				cq.orderBy(cb.asc(book.get(sortField)));
+			} else if (sortOrder.equalsIgnoreCase("desc")) {
+				cq.orderBy(cb.desc(book.get(sortField)));
+			}
+		}
 
         TypedQuery<Book> query = em.createQuery(cq);
 
         return query.getResultList();
 	}
+
 
 }

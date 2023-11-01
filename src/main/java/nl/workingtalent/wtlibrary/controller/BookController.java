@@ -185,7 +185,7 @@ public class BookController {
 
 	@PostMapping("book/filter")
 	public List<BookDto> filter(@RequestBody FilterBookDto dto ) {
-		List<Book> books = service.filter(dto.getFilterWord(), dto.getCategories(), dto.getSubject(), dto.getMinReviewScore());
+		List<Book> books = service.filter(dto.getFilterWord(), dto.getCategories(), dto.getSubject(), dto.getMinReviewScore(), dto.getSortField(), dto.getSortOrder());
 		
 		return books.stream().map(book -> {
 			BookDto bookDto = new BookDto();

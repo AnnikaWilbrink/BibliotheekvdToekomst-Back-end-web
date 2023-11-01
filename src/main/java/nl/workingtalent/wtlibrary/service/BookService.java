@@ -43,10 +43,10 @@ public class BookService {
 		repository.save(book);
 	}
 	
-	public List<Book> filter(String filterWord, List<String> isCategory, List<String> hasSubject, Integer minReviewScore) {
-		return searchRepository.search(filterWord, isCategory, hasSubject, minReviewScore);
+	public List<Book> filter(String filterWord, List<String> isCategory, List<String> hasSubject, Integer minReviewScore, String sortField, String sortOrder) {
+		return searchRepository.search(filterWord, isCategory, hasSubject, minReviewScore, sortField, sortOrder);
 	}
-	
+
 	public int findNrOfCopies(Book book) {
 		List<BookCopy> bookCopies = book.getBookcopies();
 		
