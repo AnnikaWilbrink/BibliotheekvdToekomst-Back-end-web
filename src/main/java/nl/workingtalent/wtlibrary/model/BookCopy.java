@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 
 @Entity
 public class BookCopy {
@@ -17,8 +18,11 @@ public class BookCopy {
     @Column
     private boolean available;
     
-    @Column(nullable = false)
+    @Column
     private long copyNumber;
+    
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean archived;
 
 	@ManyToOne
 	private Book book;
@@ -39,7 +43,15 @@ public class BookCopy {
 		this.copyNumber = copyNumber;
 	}
 
-    public Book getBook() {
+    public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
+	public Book getBook() {
         return book;
     }
 
@@ -54,5 +66,6 @@ public class BookCopy {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+    
 
 }
