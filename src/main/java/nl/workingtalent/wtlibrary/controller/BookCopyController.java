@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import nl.workingtalent.wtlibrary.dto.BookArchiveDto;
+import nl.workingtalent.wtlibrary.dto.BookCopyArchiveDto;
 import nl.workingtalent.wtlibrary.dto.BookCopyDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookCopyDto;
 import nl.workingtalent.wtlibrary.model.Book;
@@ -43,7 +46,7 @@ public class BookCopyController {
 	        dto.setId(copy.getId());
 	        dto.setAvailable(copy.isAvailable());
 	        dto.setCopyNumber(copy.getCopyNumber());
-	        
+	        dto.setArchived(copy.isArchived());
 	        dtos.add(dto);
 	    });
 	    
@@ -67,7 +70,7 @@ public class BookCopyController {
         	dto.setId(bookCopy.getId());
         	dto.setCopyNumber(bookCopy.getCopyNumber());
         	dto.setAvailable(bookCopy.isAvailable());
-        	
+        	dto.setArchived(bookCopy.isArchived());
         	dtos.add(dto);
         });
         
@@ -82,10 +85,10 @@ public class BookCopyController {
             
 		    BookCopy bookCopy = new BookCopy();
 		    bookCopy.setAvailable(dto.isAvailable());
-		    bookCopy.setCopyNumber(dto.getCopyNumber());
+//		    bookCopy.setCopyNumber(dto.getCopyNumber());
 		    bookCopy.setBook(book);
 	    
-		    service.save(bookCopy);
+		    service.createNewCopy(bookCopy, book);
 		}
 	    return true;
 	}
@@ -110,14 +113,25 @@ public class BookCopyController {
 	    return true;
 	}
 	
-//	@GetMapping("/highest-copy-number")
-//    public ResponseEntity<Long> getHighestCopyNumber() {
-//        Long highestCopyNumber = service.findHighestCopyNumber();
-//        if (highestCopyNumber != null) {
-//            return ResponseEntity.ok(highestCopyNumber);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+	@PutMapping("bookcopy/archive/{id}")
+	public BookCopyArchiveDto archiveBook(@PathVariable long id) {
+		BookCopyArchiveDto archived = new BookCopyArchiveDto();
+		boolean isArchived = service.archiveBookCopy(id);
+		archived.setArchived(isArchived);
+		archived.setAvailable(isArchived ? false : true);
+		return archived;
+
+	}
+	
+	@PutMapping("bookcopy/unarchive/{id}")
+	public BookCopyArchiveDto unarchiveBook(@PathVariable long id) {
+		BookCopyArchiveDto archived = new BookCopyArchiveDto();
+		boolean isArchived = service.unarchiveBookCopy(id);
+		archived.setArchived(isArchived);
+		archived.setAvailable(isArchived ? false : true);
+		return archived;
+
+	}
+	
 
 }
