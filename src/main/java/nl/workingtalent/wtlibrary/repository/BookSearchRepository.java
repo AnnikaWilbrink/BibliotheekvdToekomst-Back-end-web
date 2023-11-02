@@ -3,6 +3,7 @@ package nl.workingtalent.wtlibrary.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Expression;
+
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.Review;
 
@@ -39,18 +42,18 @@ public class BookSearchRepository {
         	predicates.add(searchWordPredicate);
         }
 
-        if (isCategory != null && !isCategory.isEmpty()) {
-			List<Predicate> searchCategoryPredicates = new ArrayList<>();
+        // if (isCategory != null && !isCategory.isEmpty()) {
+		// 	List<Predicate> searchCategoryPredicates = new ArrayList<>();
 
-			for (String i : isCategory) {
-				Predicate searchCategoryPredicate = cb.equal(book.get("category"), i);
-				searchCategoryPredicates.add(searchCategoryPredicate);
-			}
+		// 	for (String i : isCategory) {
+		// 		Predicate searchCategoryPredicate = cb.equal(book.get("category"), i);
+		// 		searchCategoryPredicates.add(searchCategoryPredicate);
+		// 	}
 
-			Predicate categoryPredicates = cb.or(searchCategoryPredicates);
-        	predicates.add(categoryPredicates);
+		// 	Predicate categoryPredicates = cb.or(searchCategoryPredicates);
+        // 	predicates.add(categoryPredicates);
 			
-		}
+		// }
 
 		if (hasSubject != null && !hasSubject.isEmpty()) {
 			for (String i : hasSubject) {
@@ -67,6 +70,7 @@ public class BookSearchRepository {
         	predicates.add(reviewsPredicate);
         }
 
+
         if (!predicates.isEmpty()) {
 	        Predicate finalQuery = cb.and(predicates.toArray(new Predicate[] {}));
 	        cq.where(finalQuery);
@@ -76,6 +80,7 @@ public class BookSearchRepository {
 		//cq.orderBy(cb.asc(book.get("title")));
 
 		// Sorting logic
+
 		if (sortField != null && sortOrder != null) {
 			if (sortOrder.equalsIgnoreCase("asc")) {
 				cq.orderBy(cb.asc(book.get(sortField)));
