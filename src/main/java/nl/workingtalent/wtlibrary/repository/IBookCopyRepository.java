@@ -19,6 +19,6 @@ public interface IBookCopyRepository extends JpaRepository<BookCopy, Long> {
 
     List<BookCopy> findByAvailableAndBook(boolean available, Book book);
     
-    @Query("SELECT MAX(b.copyNumber) FROM BookCopy b WHERE b.book = :book")
+    @Query("SELECT COUNT(b.copyNumber) FROM BookCopy b WHERE b.book = :book")
     Long findMaxCopyNumberByBook(@Param("book") Book book);
 }
