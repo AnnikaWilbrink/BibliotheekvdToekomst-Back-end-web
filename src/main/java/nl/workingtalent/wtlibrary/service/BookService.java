@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.repository.BookSearchRepository;
 import nl.workingtalent.wtlibrary.model.BookCopy;
+import nl.workingtalent.wtlibrary.model.Review;
+import nl.workingtalent.wtlibrary.repository.IReviewRepository;
 import nl.workingtalent.wtlibrary.repository.IBookRepository;
 
 
@@ -22,6 +24,9 @@ public class BookService {
 	
 	@Autowired
 	private BookSearchRepository searchRepository;
+
+	@Autowired
+	private IReviewRepository reviewRepository;
 	
 	public List<Book> findAll(){
 		return repository.findAll();
@@ -46,6 +51,22 @@ public class BookService {
 	public List<Book> filter(String filterWord, List<String> isCategory, List<String> hasSubject, Integer minReviewScore, String sortField, String sortOrder) {
 		return searchRepository.search(filterWord, isCategory, hasSubject, minReviewScore, sortField, sortOrder);
 	}
+
+	public Double calculateAverageRating(Book book){
+		List<Review> reviews = reviewRepository.findByBook(book);
+
+		double totalRating = 0.0;
+		
+		for (Review review : reviews) {
+			totalRating += review.getStars(); // Assuming stars is a field or method that returns the star rating value
+		}
+
+		if (reviews.isEmpty()) {
+			return 0.0; // Return 0 if there are no reviews
+		} else {
+			return totalRating / reviews.size();
+		}
+		}
 
 	public int findNrOfCopies(Book book) {
 		List<BookCopy> bookCopies = book.getBookcopies();

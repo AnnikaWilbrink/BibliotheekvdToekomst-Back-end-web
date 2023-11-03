@@ -42,6 +42,9 @@ public class Book {
     
     @Column(length = 50, nullable = false)
     private String availablity;
+
+	@Column(nullable = true)
+	private Double avgRating;
     
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean archived;
@@ -137,7 +140,15 @@ public class Book {
 	public void setAvailablity(String availablity) {
 		this.availablity = availablity;
 	}
-	
+
+	public Double getAvgRating() {
+		return avgRating;
+	}
+
+	public void setAvgRating(Double avgRating) {
+		this.avgRating = avgRating;
+	}
+
 	public boolean isArchived() {
 		return archived;
 	}
@@ -170,12 +181,14 @@ public class Book {
 		this.reviews = reviews;
 	}
 
-    public List<BookCopy> getBookcopies() {
-        return bookcopies;
-    }
+	public List<BookCopy> getBookcopies() {
+		return bookcopies;
+	}
 
-    public void setBookcopies(List<BookCopy> bookcopies) {
-        this.bookcopies = bookcopies;
-    }
+	public void setBookcopies(List<BookCopy> bookcopies) {
+		this.bookcopies = bookcopies;
+	}
+
+	
 
 }

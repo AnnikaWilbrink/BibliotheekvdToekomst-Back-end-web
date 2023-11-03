@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import nl.workingtalent.wtlibrary.dto.BookArchiveDto;
 import nl.workingtalent.wtlibrary.dto.BookAvailabilityDto;
+import nl.workingtalent.wtlibrary.dto.BookAvgRatingDto;
 import nl.workingtalent.wtlibrary.dto.BookDto;
 import nl.workingtalent.wtlibrary.dto.BookInfoDto;
 import nl.workingtalent.wtlibrary.dto.FilterBookDto;
@@ -202,6 +203,20 @@ public class BookController {
 
 			return bookDto;
 		}).collect(Collectors.toList());
+	}
+
+	@PutMapping("book/average/rating/{id}")
+	public BookAvgRatingDto calAvgRating(@PathVariable long id){
+		Optional<Book> optional = service.findById(id);
+		if(optional.isEmpty()) {
+			return Optional.empty();
+	    }
+		Book book = optional.get();
+
+		BookAvgRatingDto avgRating = new BookAvgRatingDto();
+		Double isAvgRating = service.calculateAverageRating(book);
+		avgRating.setAvgRating(isAvgRating);
+		return avgRating;
 	}
 
 	@GetMapping("book/availability/{id}")
