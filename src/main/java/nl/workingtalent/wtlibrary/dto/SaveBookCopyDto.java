@@ -5,6 +5,8 @@ public class SaveBookCopyDto {
     private boolean available;
     
     private int copyNumber;
+    
+    private long book;
 
 	public int getCopyNumber() {
 		return copyNumber;
@@ -21,5 +23,15 @@ public class SaveBookCopyDto {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+
+	public long getBook() {
+		return book;
+	}
+
+	public void setBook(long book) {
+		this.book = book;
+	}
+    
+    
 
 }

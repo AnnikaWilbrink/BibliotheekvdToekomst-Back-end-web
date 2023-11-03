@@ -24,6 +24,7 @@ import nl.workingtalent.wtlibrary.dto.BookDto;
 import nl.workingtalent.wtlibrary.dto.BookInfoDto;
 import nl.workingtalent.wtlibrary.dto.FilterBookDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookDto;
+import nl.workingtalent.wtlibrary.dto.UpdateBookDto;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.BookCopy;
 import nl.workingtalent.wtlibrary.service.BookCopyService;
@@ -54,7 +55,32 @@ public class BookController {
 			bookDto.setAuthor(dbBook.getAuthor());
 			bookDto.setSummary(dbBook.getSummary());
 			bookDto.setCoverUrl(dbBook.getCoverUrl());
-			// bookDto.setAvailablity(dbBook.getAvailablity());
+			// bookDto.setAvailability(dbBook.getAvailability());
+			bookDto.setSubject(dbBook.getSubject());
+			bookDto.setCategory(dbBook.getCategory());
+			bookDto.setArchived(dbBook.isArchived());
+			// bookDto.setReviews(dbBook.getReviews());
+
+			dtos.add(bookDto);
+		});
+
+		return dtos;
+	}
+	
+	@RequestMapping("book/allUnarchived")
+	public List<BookDto> findAllUnarchivedBooks() {
+		List<Book> dbBooks = service.findAllUnarchived();
+		List<BookDto> dtos = new ArrayList<>();
+
+		dbBooks.forEach(dbBook -> {
+			BookDto bookDto = new BookDto();
+			bookDto.setId(dbBook.getId());
+			bookDto.setTitle(dbBook.getTitle());
+			bookDto.setIsbn(dbBook.getIsbn());
+			bookDto.setAuthor(dbBook.getAuthor());
+			bookDto.setSummary(dbBook.getSummary());
+			bookDto.setCoverUrl(dbBook.getCoverUrl());
+			// bookDto.setAvailability(dbBook.getAvailability());
 			bookDto.setSubject(dbBook.getSubject());
 			bookDto.setCategory(dbBook.getCategory());
 			bookDto.setArchived(dbBook.isArchived());
@@ -66,31 +92,24 @@ public class BookController {
 		return dtos;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "book/save")
+	@PostMapping("book/save")
 	public boolean save(@RequestBody SaveBookDto dto) {
 		// Dto -> Model
 		Book book = new Book();
 		book.setTitle(dto.getTitle());
 		book.setIsbn(dto.getIsbn());
 		book.setAuthor(dto.getAuthor());
-		// book.setAvailablity(dto.getAvailablity());
 		book.setCategory(dto.getCategory());
 		book.setEdition(dto.getEdition());
 		book.setCoverUrl(dto.getCoverUrl());
 		book.setEdition(dto.getEdition());
 		book.setSubject(dto.getSubject());
 		book.setSummary(dto.getSummary());
+		
 
-		// service.save(book);
-		// return true;
-		//
-		try {
-			// Attempt to save the book
-			service.save(book);
-			return true;
-		} catch (DataIntegrityViolationException e) {
-			return false;
-		}
+		 service.save(book);
+		 return true;
+		
 	}
 
 	@RequestMapping("book/{id}")
@@ -99,7 +118,7 @@ public class BookController {
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value = "book/{id}")
-	public boolean update(@PathVariable long id, @RequestBody SaveBookDto dto) {
+	public boolean update(@PathVariable long id, @RequestBody UpdateBookDto dto) {
 		Optional<Book> optional = service.findById(id);
 		if (optional.isEmpty()) {
 			return false;
@@ -109,7 +128,7 @@ public class BookController {
 		existingBook.setTitle(dto.getTitle());
 		existingBook.setIsbn(dto.getIsbn());
 		existingBook.setAuthor(dto.getAuthor());
-		existingBook.setAvailablity(dto.getAvailablity());
+		existingBook.setAvailability(dto.getAvailability());
 		existingBook.setCategory(dto.getCategory());
 		existingBook.setEdition(dto.getEdition());
 		existingBook.setCoverUrl(dto.getCoverUrl());
@@ -153,7 +172,7 @@ public class BookController {
 		dto.setSubject(book.getSubject());
 		dto.setSummary(book.getSummary());
 		dto.setTitle(book.getTitle());
-		dto.setAvailablity(book.getAvailablity());
+		dto.setAvailability(book.getAvailability());
 		dto.setEdition(book.getEdition());
 
 		return Optional.of(dto);
@@ -178,7 +197,7 @@ public class BookController {
 		dto.setSubject(book.getSubject());
 		dto.setSummary(book.getSummary());
 		dto.setTitle(book.getTitle());
-		dto.setAvailablity(book.getAvailablity());
+		dto.setAvailability(book.getAvailability());
 		dto.setEdition(book.getEdition());
 
 		return Optional.of(dto);
@@ -192,7 +211,7 @@ public class BookController {
 			BookDto bookDto = new BookDto();
 
 			bookDto.setAuthor(book.getAuthor());
-			// bookDto.setAvailablity(book.getAvailablity());
+			// bookDto.setAvailability(book.getAvailability());
 			bookDto.setCategory(book.getCategory());
 			bookDto.setCoverUrl(book.getCoverUrl());
 			bookDto.setId(book.getId());

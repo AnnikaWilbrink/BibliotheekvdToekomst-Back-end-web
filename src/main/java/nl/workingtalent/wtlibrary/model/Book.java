@@ -2,6 +2,8 @@ package nl.workingtalent.wtlibrary.model;
 
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,8 +42,8 @@ public class Book {
     @Column(length = 300, nullable = false)
     private String coverUrl;
     
-    @Column(length = 50, nullable = false)
-    private String availablity;
+    @Column(nullable = false, columnDefinition = "varchar(50) default 'available'")
+    private String availability = "available";
 
 	@Column(nullable = true)
 	private Double avgRating;
@@ -133,12 +135,12 @@ public class Book {
 		this.coverUrl = coverUrl;
 	}
 
-	public String getAvailablity() {
-		return availablity;
+	public String getAvailability() {
+		return availability;
 	}
 
-	public void setAvailablity(String availablity) {
-		this.availablity = availablity;
+	public void setAvailability(String availability) {
+		this.availability = availability;
 	}
 
 	public Double getAvgRating() {

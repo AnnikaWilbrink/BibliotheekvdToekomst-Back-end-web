@@ -23,7 +23,9 @@ public class BookCopyService {
 		return repository.findByBook(book);
 	}
 	
-	public void save(BookCopy bookCopy) {
+	public void createNewCopy(BookCopy bookCopy, Book book) {
+		Long maxCopyNumber = repository.findMaxCopyNumberByBook(book);
+        bookCopy.setCopyNumber((maxCopyNumber != null) ? maxCopyNumber + 1 : 1);
 		repository.save(bookCopy);
 	}
 	
@@ -42,4 +44,34 @@ public class BookCopyService {
 	public List<BookCopy> findAvailableCopies(Book book){
 		return repository.findByAvailableAndBook(true, book);
 	}
+	
+	public boolean archiveBookCopy(Long bookCopyId) {
+	    Optional<BookCopy> bookCopyOptional = repository.findById(bookCopyId);
+	    if (bookCopyOptional.isPresent()) {
+	        BookCopy bookCopy = bookCopyOptional.get();
+	        bookCopy.setArchived(true);
+	        bookCopy.setAvailable(false);
+	        repository.save(bookCopy);
+	        return true;
+	    }
+	    return false;
+	}
+    
+	public boolean unarchiveBookCopy(Long bookCopyId) {
+	    Optional<BookCopy> bookCopyOptional = repository.findById(bookCopyId);
+	    if (bookCopyOptional.isPresent()) {
+	        BookCopy bookCopy = bookCopyOptional.get();
+	        bookCopy.setArchived(false);
+	        bookCopy.setAvailable(true);
+	        repository.save(bookCopy);
+	        return true;
+	    }
+	    return false;
+	}
+	
+	
+	
+	
+	
+	
 }
