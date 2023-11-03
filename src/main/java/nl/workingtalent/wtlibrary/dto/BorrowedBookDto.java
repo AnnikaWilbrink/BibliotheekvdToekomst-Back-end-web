@@ -7,6 +7,7 @@ public class BorrowedBookDto {
     private long id;
     private long userId;
     private long bookCopyId;
+    private long copyNumber;
     private String userFirstName;
     private String userLastName;
     private String userEmail;
@@ -38,8 +39,17 @@ public class BorrowedBookDto {
     public void setBookCopyId(long bookCopyId) {
         this.bookCopyId = bookCopyId;
     }
+    
 
-    public LocalDateTime getBorrowDate() {
+    public long getCopyNumber() {
+		return copyNumber;
+	}
+
+	public void setCopyNumber(long copyNumber) {
+		this.copyNumber = copyNumber;
+	}
+
+	public LocalDateTime getBorrowDate() {
         return borrowDate;
     }
 
