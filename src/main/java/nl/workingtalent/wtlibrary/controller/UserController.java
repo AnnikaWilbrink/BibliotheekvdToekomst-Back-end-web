@@ -107,6 +107,7 @@ public class UserController {
 			return false;
 		}
 		User existingUser = optional.get();
+		
 		existingUser.setFirstName(dto.getFirstName());
 		existingUser.setLastName(dto.getLastName());
 		existingUser.setPassword(dto.getPassword()); // Consider hashing if changed
@@ -121,7 +122,17 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "user/{id}")
 	public boolean delete(@PathVariable long id) {
-		service.delete(id);
+		Optional<User> optional = service.findById(id);
+		if (optional.isEmpty()) {
+			return false;
+		}
+		User existingUser = optional.get();
+		existingUser.setFirstName(null);
+		existingUser.setLastName(null);
+		existingUser.setPhoneNumber(null);
+		existingUser.setEmail(null);
+		existingUser.setPassword(null); // Consider hashing if changed
+		service.update(existingUser);
 		return true;
 	}
 
@@ -200,6 +211,7 @@ public class UserController {
 
 	
 	// function to delete ALL user data
+	/* 
 	@RequestMapping(method = RequestMethod.POST, value = "user/deleteUser")
 	public ResponseEntity<?> deleteCurrentUser(@RequestBody UserLoginDto dto, HttpServletRequest request) {
 	    User loggedInUser = (User) request.getAttribute("WT_USER");
@@ -215,7 +227,7 @@ public class UserController {
 
 	    return new ResponseEntity<>("User information deleted successfully", HttpStatus.OK);
 	}
-	
+	*/
 	
 	@GetMapping("user/role/{role}")
 	public List<UserDto> findUsersByRole(@PathVariable String role) {
@@ -239,7 +251,7 @@ public class UserController {
 	}
 	
 	
-	
+	/* 
 	@RequestMapping(method = RequestMethod.DELETE, value = "user/adminDelete/{id}")
 	public ResponseEntity<?> adminDelete(@PathVariable long id, HttpServletRequest request) {
 	    // Extract the token from the request header
@@ -261,6 +273,7 @@ public class UserController {
 	    return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
 	}
 	
+	*/
 	
 
 }
