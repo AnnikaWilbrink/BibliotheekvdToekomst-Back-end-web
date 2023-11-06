@@ -131,4 +131,8 @@ public class UserService {
 	    // If you're using Spring Data JPA, it could be a method like `findByRole(String role)`.
 	    return repository.findByRole(role);
 	}
+	
+	public Optional<User> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
 }
