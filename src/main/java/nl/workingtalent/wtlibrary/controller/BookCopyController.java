@@ -6,18 +6,24 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import nl.workingtalent.wtlibrary.dto.BookArchiveDto;
+import nl.workingtalent.wtlibrary.dto.BookCopyArchiveDto;
 import nl.workingtalent.wtlibrary.dto.BookCopyDto;
 import nl.workingtalent.wtlibrary.dto.SaveBookCopyDto;
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.BookCopy;
+import nl.workingtalent.wtlibrary.model.User;
 import nl.workingtalent.wtlibrary.service.BookCopyService;
 import nl.workingtalent.wtlibrary.service.BookService;
 
@@ -40,7 +46,7 @@ public class BookCopyController {
 	        dto.setId(copy.getId());
 	        dto.setAvailable(copy.isAvailable());
 	        dto.setCopyNumber(copy.getCopyNumber());
-	        
+	        dto.setArchived(copy.isArchived());
 	        dtos.add(dto);
 	    });
 	    
@@ -64,20 +70,25 @@ public class BookCopyController {
         	dto.setId(bookCopy.getId());
         	dto.setCopyNumber(bookCopy.getCopyNumber());
         	dto.setAvailable(bookCopy.isAvailable());
-        	
+        	dto.setArchived(bookCopy.isArchived());
         	dtos.add(dto);
         });
         
         return dtos;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="bookcopy/save")
+	@PostMapping("bookcopy/save")
 	public boolean save(@RequestBody SaveBookCopyDto dto) {
-	    BookCopy bookCopy = new BookCopy();
-	    bookCopy.setAvailable(dto.isAvailable());
-	    bookCopy.setCopyNumber(dto.getCopyNumber());
+		Optional<Book> bookOptional = bookService.findById(dto.getBook());
+		if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            
+		    BookCopy bookCopy = new BookCopy();
+		    bookCopy.setAvailable(dto.isAvailable());
+		    bookCopy.setBook(book);
 	    
-	    service.save(bookCopy);
+		    service.createNewCopy(bookCopy, book);
+		}
 	    return true;
 	}
 	
@@ -95,10 +106,30 @@ public class BookCopyController {
 	    BookCopy existingBookCopy = optional.get();
 	    
 	    existingBookCopy.setAvailable(dto.isAvailable());
-	    // existingBookCopy.setCopyNumber(dto.getCopyNumber());
 	    
 	    service.update(existingBookCopy);
 	    return true;
 	}
+	
+	@PutMapping("bookcopy/archive/{id}")
+	public BookCopyArchiveDto archiveBook(@PathVariable long id) {
+		BookCopyArchiveDto archived = new BookCopyArchiveDto();
+		boolean isArchived = service.archiveBookCopy(id);
+		archived.setArchived(isArchived);
+		archived.setAvailable(isArchived ? false : true);
+		return archived;
+
+	}
+	
+	@PutMapping("bookcopy/unarchive/{id}")
+	public BookCopyArchiveDto unarchiveBook(@PathVariable long id) {
+		BookCopyArchiveDto archived = new BookCopyArchiveDto();
+		boolean isArchived = service.unarchiveBookCopy(id);
+		archived.setArchived(isArchived);
+		archived.setAvailable(isArchived ? false : true);
+		return archived;
+
+	}
+	
 
 }

@@ -68,7 +68,10 @@ public class BorrowedBookController {
             dto.setUserLastName(borrowedBook.getUser().getLastName());
             dto.setUserEmail(borrowedBook.getUser().getEmail());
             dto.setBookTitle(borrowedBook.getBookTitle());
-            dto.setBookCopyId(borrowedBook.getBookCopy().getId());
+//            dto.setBookCopyId(borrowedBook.getBookCopy().getId());
+            BookCopy bookCopy = borrowedBook.getBookCopy();
+            dto.setBookCopyId(bookCopy.getId());
+            dto.setCopyNumber(bookCopy.getCopyNumber());
             dto.setBorrowDate(borrowedBook.getBorrowDate());
             dto.setReturnedDate(borrowedBook.getReturnedDate());
             dtos.add(dto);
@@ -112,7 +115,11 @@ public class BorrowedBookController {
             dto.setUserId(borrowedBook.getUser().getId());
             dto.setUserEmail(borrowedBook.getUser().getEmail());
             dto.setBookTitle(borrowedBook.getBookTitle());
-            dto.setBookCopyId(borrowedBook.getBookCopy().getId());
+            BookCopy bookCopy = borrowedBook.getBookCopy();
+            if (bookCopy != null) {
+                dto.setBookCopyId(bookCopy.getId());
+                dto.setCopyNumber(bookCopy.getCopyNumber());
+            }
             dto.setBorrowDate(borrowedBook.getBorrowDate());
             dto.setReturnedDate(borrowedBook.getReturnedDate());
             return Optional.of(dto);

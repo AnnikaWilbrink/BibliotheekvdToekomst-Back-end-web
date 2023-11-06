@@ -65,6 +65,31 @@ public class BookController {
 
 		return dtos;
 	}
+	
+	@RequestMapping("book/allUnarchived")
+	public List<BookDto> findAllUnarchivedBooks() {
+		List<Book> dbBooks = service.findAllUnarchived();
+		List<BookDto> dtos = new ArrayList<>();
+
+		dbBooks.forEach(dbBook -> {
+			BookDto bookDto = new BookDto();
+			bookDto.setId(dbBook.getId());
+			bookDto.setTitle(dbBook.getTitle());
+			bookDto.setIsbn(dbBook.getIsbn());
+			bookDto.setAuthor(dbBook.getAuthor());
+			bookDto.setSummary(dbBook.getSummary());
+			bookDto.setCoverUrl(dbBook.getCoverUrl());
+			// bookDto.setAvailability(dbBook.getAvailability());
+			bookDto.setSubject(dbBook.getSubject());
+			bookDto.setCategory(dbBook.getCategory());
+			bookDto.setArchived(dbBook.isArchived());
+			// bookDto.setReviews(dbBook.getReviews());
+
+			dtos.add(bookDto);
+		});
+
+		return dtos;
+	}
 
 	@PostMapping("book/save")
 	public boolean save(@RequestBody SaveBookDto dto) {

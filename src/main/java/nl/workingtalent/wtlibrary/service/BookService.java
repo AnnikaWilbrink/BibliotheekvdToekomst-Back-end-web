@@ -27,6 +27,19 @@ public class BookService {
 		return repository.findAll();
 	}
 	
+	public List<Book> findAllUnarchived() {
+        List<Book> allBooks = repository.findAll();
+        List<Book> nonArchivedBooks = new ArrayList<>();
+
+        for (Book book : allBooks) {
+            if (!book.isArchived()) {
+                nonArchivedBooks.add(book);
+            }
+        }
+
+        return nonArchivedBooks;
+    }
+	
 	public void save(Book book) {
 		repository.save(book);
 	}

@@ -4,6 +4,8 @@ public class BookCopyDto {
 
     private long id;
     
+    private boolean archived;
+    
     private boolean available;
     
     private long copyNumber;
@@ -14,6 +16,14 @@ public class BookCopyDto {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+	
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 
 	public long getCopyNumber() {
