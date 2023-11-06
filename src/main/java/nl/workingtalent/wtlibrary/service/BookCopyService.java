@@ -12,6 +12,7 @@ import nl.workingtalent.wtlibrary.repository.IBookCopyRepository;
 
 @Service
 public class BookCopyService {
+	
 	@Autowired
 	private IBookCopyRepository repository;
 	

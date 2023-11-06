@@ -85,7 +85,6 @@ public class BookCopyController {
             
 		    BookCopy bookCopy = new BookCopy();
 		    bookCopy.setAvailable(dto.isAvailable());
-//		    bookCopy.setCopyNumber(dto.getCopyNumber());
 		    bookCopy.setBook(book);
 	    
 		    service.createNewCopy(bookCopy, book);
@@ -107,7 +106,6 @@ public class BookCopyController {
 	    BookCopy existingBookCopy = optional.get();
 	    
 	    existingBookCopy.setAvailable(dto.isAvailable());
-	    // existingBookCopy.setCopyNumber(dto.getCopyNumber());
 	    
 	    service.update(existingBookCopy);
 	    return true;

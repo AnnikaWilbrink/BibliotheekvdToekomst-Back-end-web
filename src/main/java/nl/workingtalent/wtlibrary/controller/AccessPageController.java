@@ -35,5 +35,16 @@ public class AccessPageController {
         } 
         return ResponseEntity.ok(false);
     }
+
+    @PostMapping(value = "/authenticate/user/{id}", produces = "application/json")
+    public ResponseEntity<Boolean> userPage(@RequestBody AccessControlDto accessRequestDto) {
+        String role = accessRequestDto.getRole();
+        String token = accessRequestDto.getToken();
+        long userId = accessRequestDto.getUserId();
+        if (accessPageService.hasPermissionToAccessPage(role, token, userId)) {
+            return ResponseEntity.ok(true);
+        } 
+        return ResponseEntity.ok(false);
+    }
 }
 

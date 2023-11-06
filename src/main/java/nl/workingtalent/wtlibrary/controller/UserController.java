@@ -107,6 +107,7 @@ public class UserController {
 			return false;
 		}
 		User existingUser = optional.get();
+		
 		existingUser.setFirstName(dto.getFirstName());
 		existingUser.setLastName(dto.getLastName());
 		existingUser.setPassword(dto.getPassword()); // Consider hashing if changed
@@ -121,7 +122,17 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "user/{id}")
 	public boolean delete(@PathVariable long id) {
-		service.delete(id);
+		Optional<User> optional = service.findById(id);
+		if (optional.isEmpty()) {
+			return false;
+		}
+		User existingUser = optional.get();
+		existingUser.setFirstName(null);
+		existingUser.setLastName(null);
+		existingUser.setPhoneNumber(null);
+		existingUser.setEmail(null);
+		existingUser.setPassword(null); // Consider hashing if changed
+		service.update(existingUser);
 		return true;
 	}
 
@@ -202,16 +213,23 @@ public class UserController {
 	// function to delete ALL user data
 	@RequestMapping(method = RequestMethod.POST, value = "user/deleteUser")
 	public ResponseEntity<?> deleteCurrentUser(@RequestBody UserLoginDto dto, HttpServletRequest request) {
-	    User loggedInUser = (User) request.getAttribute("WT_USER");
-	    
-	    // If no user is logged in, reject the request
-	    if (loggedInUser == null) {
-	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
-	    }
+		User loggedInUser = (User) request.getAttribute("WT_USER");
+		Optional<User> optional = service.findByEmail(dto.getEmail());
+		if (optional.isEmpty() || loggedInUser == null) {
+			return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+		}
 
+		User existingUser = optional.get();
+		
 	    // Deleting the current logged-in user
 	    // The other data, like reviews will automatically also be deleted (cascade)
-	    service.delete(loggedInUser.getId());
+
+		existingUser.setFirstName(null);
+		existingUser.setLastName(null);
+		existingUser.setPhoneNumber(null);
+		existingUser.setEmail(null);
+		existingUser.setPassword(null); // Consider hashing if changed
+		service.update(existingUser);
 
 	    return new ResponseEntity<>("User information deleted successfully", HttpStatus.OK);
 	}
@@ -238,29 +256,34 @@ public class UserController {
 	    return dtos;
 	}
 	
-	
-	
 	@RequestMapping(method = RequestMethod.DELETE, value = "user/adminDelete/{id}")
 	public ResponseEntity<?> adminDelete(@PathVariable long id, HttpServletRequest request) {
 	    // Extract the token from the request header
 		User user = (User) request.getAttribute("WT_USER");
+		Optional<User> optional = service.findById(id);
 
-	    if (user == null) {
-	        // Token is invalid or user not found
-	        return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
-	    }
-	    
+		if (optional.isEmpty() || user == null) {
+			return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+		}
 
-	    if (!"admin".equalsIgnoreCase(user.getRole())) {
+		if (!"admin".equalsIgnoreCase(user.getRole())) {
 	        // User is not an admin
 	        return new ResponseEntity<>("Unauthorized", HttpStatus.FORBIDDEN);
 	    }
 
-	    // If we've reached this point, the user is an admin. Proceed with the deletion.
-	    service.delete(id);
+		User existingUser = optional.get();
+		
+	    // Deleting the current logged-in user
+	    // The other data, like reviews will automatically also be deleted (cascade)
+
+		existingUser.setFirstName(null);
+		existingUser.setLastName(null);
+		existingUser.setPhoneNumber(null);
+		existingUser.setEmail(null);
+		existingUser.setPassword(null); // Consider hashing if changed
+		service.update(existingUser);
+
 	    return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
-	}
-	
-	
+	}	
 
 }
