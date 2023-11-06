@@ -227,9 +227,9 @@ public class BookController {
 	@PutMapping("book/average/rating/{id}")
 	public BookAvgRatingDto calAvgRating(@PathVariable long id){
 		Optional<Book> optional = service.findById(id);
-		if(optional.isEmpty()) {
-			return Optional.empty();
-	    }
+		// if(optional.isEmpty()) {
+		// 	return Optional.empty();
+	    // }
 		Book book = optional.get();
 
 		BookAvgRatingDto avgRating = new BookAvgRatingDto();
