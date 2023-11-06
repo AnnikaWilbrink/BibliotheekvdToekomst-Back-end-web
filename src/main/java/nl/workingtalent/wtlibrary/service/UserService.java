@@ -26,6 +26,10 @@ public class UserService {
 		return repository.findAll();
 	}
 
+	public Optional<User> findByEmail(String email){
+		return repository.findByEmail(email);
+	}
+
 	public void save(User user) {
 		String rawPassword = user.getPassword();
         String hashedPassword = passwordHashingService.hashPassword(rawPassword);
