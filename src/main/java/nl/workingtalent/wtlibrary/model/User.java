@@ -152,6 +152,10 @@ public class User {
     public boolean isAdmin() {
     	return role != null && role.equals("admin");
     }
+    
+    public boolean isFrontdesk() {
+    	return role != null && role.equals("front-desk");
+    }
 
     public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
