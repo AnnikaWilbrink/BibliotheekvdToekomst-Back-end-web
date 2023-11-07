@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import nl.workingtalent.wtlibrary.dto.LoginResponseDto;
 import nl.workingtalent.wtlibrary.dto.SaveUserDto;
+import nl.workingtalent.wtlibrary.dto.SaveUserTokenDto;
 import nl.workingtalent.wtlibrary.dto.UserChangeEmailDto;
 import nl.workingtalent.wtlibrary.dto.UserChangePasswordDto;
 import nl.workingtalent.wtlibrary.dto.UserChangePhoneNumberDto;
 import nl.workingtalent.wtlibrary.dto.UserDto;
 import nl.workingtalent.wtlibrary.dto.UserLoginDto;
 import nl.workingtalent.wtlibrary.model.User;
+import nl.workingtalent.wtlibrary.service.InvitationTokenService;
 import nl.workingtalent.wtlibrary.service.UserService;
 
 @RestController
@@ -33,6 +35,9 @@ public class UserController {
 
 	@Autowired
 	private UserService service;
+	
+	@Autowired
+	private InvitationTokenService invitationTokenService;
 
 	@RequestMapping("user/all")
 	public List<UserDto> findAllUsers() {
@@ -54,24 +59,54 @@ public class UserController {
 		return dtos;
 	}
 
+//	@PostMapping("user/save")
+//	public ResponseEntity<Boolean> save(@RequestBody SaveUserDto dto) {
+//		User user = new User();
+//		user.setFirstName(dto.getFirstName());
+//		user.setLastName(dto.getLastName());
+//		if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+//			user.setPassword(dto.getPassword()); 
+//		} else {
+//			return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+//		}
+//		user.setPassword(dto.getPassword()); // Consider hashing before saving
+//		user.setRole(dto.getRole());
+//		user.setEmail(dto.getEmail());
+//		user.setPhoneNumber(dto.getPhoneNumber());
+//
+//		service.save(user);
+//		return new ResponseEntity<>(true, HttpStatus.OK);
+//	}
+	
 	@PostMapping("user/save")
-	public ResponseEntity<Boolean> save(@RequestBody SaveUserDto dto) {
-		User user = new User();
-		user.setFirstName(dto.getFirstName());
-		user.setLastName(dto.getLastName());
-		if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-			user.setPassword(dto.getPassword()); 
-		} else {
-			return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
-		}
-		user.setPassword(dto.getPassword()); // Consider hashing before saving
-		user.setRole(dto.getRole());
-		user.setEmail(dto.getEmail());
-		user.setPhoneNumber(dto.getPhoneNumber());
+	public ResponseEntity<?> save(@RequestBody SaveUserTokenDto dto) {
+	    // Validate the token and get the role
+	    String role = invitationTokenService.validateToken(dto.getInvitationToken());
+	    if (role == null) {
+	        return new ResponseEntity<>("Invalid or expired token", HttpStatus.BAD_REQUEST);
+	    }
 
-		service.save(user);
-		return new ResponseEntity<>(true, HttpStatus.OK);
+	    User user = new User();
+	    user.setFirstName(dto.getFirstName());
+	    user.setLastName(dto.getLastName());
+	    if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+	        user.setPassword(dto.getPassword()); // Consider hashing before saving
+	    } else {
+	        return new ResponseEntity<>("Password is required", HttpStatus.BAD_REQUEST);
+	    }
+	    user.setRole(role); // Set the role from the token
+	    user.setEmail(dto.getEmail());
+	    user.setPhoneNumber(dto.getPhoneNumber());
+
+	    service.save(user);
+	    return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	
+	
+	
+	
+	
 
 	@GetMapping("user/{id}")
 	public Optional<UserDto> findById(@PathVariable long id, HttpServletRequest request) {
@@ -107,6 +142,7 @@ public class UserController {
 			return false;
 		}
 		User existingUser = optional.get();
+		
 		existingUser.setFirstName(dto.getFirstName());
 		existingUser.setLastName(dto.getLastName());
 		existingUser.setPassword(dto.getPassword()); // Consider hashing if changed
@@ -121,12 +157,53 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "user/{id}")
 	public boolean delete(@PathVariable long id) {
-		service.delete(id);
+		Optional<User> optional = service.findById(id);
+		if (optional.isEmpty()) {
+			return false;
+		}
+		User existingUser = optional.get();
+		existingUser.setFirstName(null);
+		existingUser.setLastName(null);
+		existingUser.setPhoneNumber(null);
+		existingUser.setEmail(null);
+		existingUser.setPassword(null); // Consider hashing if changed
+		service.update(existingUser);
 		return true;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "user/login")
 	public LoginResponseDto login(@RequestBody UserLoginDto loginUser) {
+		// Hardcoded superAdmin credentials
+	    final String superAdminEmail = "superAdmin@example.com";
+	    final String superAdminPassword = "superAdminPassword";
+
+	    // Check if the login request is for the superAdmin
+	    if (superAdminEmail.equals(loginUser.getEmail()) && superAdminPassword.equals(loginUser.getPassword())) {
+	        // Check if superAdmin exists in the database
+	        Optional<User> superAdminOptional = service.findByEmail(superAdminEmail);
+	        User superAdmin;
+	        if (superAdminOptional.isEmpty()) {
+	            // If superAdmin doesn't exist, create and save the superAdmin user
+	            superAdmin = new User();
+	            superAdmin.setFirstName("Super");
+	            superAdmin.setLastName("Admin");
+	            superAdmin.setPassword(superAdminPassword); // Hash the password before saving
+	            superAdmin.setRole("admin"); // TODO: aanpassen naar super_admin
+	            superAdmin.setEmail(superAdminEmail);
+	            superAdmin.setPhoneNumber("1234567890");
+	            superAdmin.setToken("super_admin_token"); // Generate a token for superAdmin
+	            service.save(superAdmin);
+	        } else {
+	            // If superAdmin exists, retrieve it
+	            superAdmin = superAdminOptional.get();
+	        }
+	        // Return a successful login response for superAdmin
+	        // You can customize the token, fullName, role, and id as needed
+	        return new LoginResponseDto(true, superAdmin.getToken(), superAdmin.getFullName(), superAdmin.getRole(), superAdmin.getId());
+	    }
+		
+		
+		
 		if (loginUser.getEmail() == null || loginUser.getEmail().isBlank()) {
 			return new LoginResponseDto(false);
 		}
@@ -202,16 +279,23 @@ public class UserController {
 	// function to delete ALL user data
 	@RequestMapping(method = RequestMethod.POST, value = "user/deleteUser")
 	public ResponseEntity<?> deleteCurrentUser(@RequestBody UserLoginDto dto, HttpServletRequest request) {
-	    User loggedInUser = (User) request.getAttribute("WT_USER");
-	    
-	    // If no user is logged in, reject the request
-	    if (loggedInUser == null) {
-	        return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
-	    }
+		User loggedInUser = (User) request.getAttribute("WT_USER");
+		Optional<User> optional = service.findByEmail(dto.getEmail());
+		if (optional.isEmpty() || loggedInUser == null) {
+			return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+		}
 
+		User existingUser = optional.get();
+		
 	    // Deleting the current logged-in user
 	    // The other data, like reviews will automatically also be deleted (cascade)
-	    service.delete(loggedInUser.getId());
+
+		existingUser.setFirstName(null);
+		existingUser.setLastName(null);
+		existingUser.setPhoneNumber(null);
+		existingUser.setEmail(null);
+		existingUser.setPassword(null); // Consider hashing if changed
+		service.update(existingUser);
 
 	    return new ResponseEntity<>("User information deleted successfully", HttpStatus.OK);
 	}
@@ -238,29 +322,34 @@ public class UserController {
 	    return dtos;
 	}
 	
-	
-	
 	@RequestMapping(method = RequestMethod.DELETE, value = "user/adminDelete/{id}")
 	public ResponseEntity<?> adminDelete(@PathVariable long id, HttpServletRequest request) {
 	    // Extract the token from the request header
 		User user = (User) request.getAttribute("WT_USER");
+		Optional<User> optional = service.findById(id);
 
-	    if (user == null) {
-	        // Token is invalid or user not found
-	        return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
-	    }
-	    
+		if (optional.isEmpty() || user == null) {
+			return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+		}
 
-	    if (!"admin".equalsIgnoreCase(user.getRole())) {
+		if (!"admin".equalsIgnoreCase(user.getRole())) {
 	        // User is not an admin
 	        return new ResponseEntity<>("Unauthorized", HttpStatus.FORBIDDEN);
 	    }
 
-	    // If we've reached this point, the user is an admin. Proceed with the deletion.
-	    service.delete(id);
+		User existingUser = optional.get();
+		
+	    // Deleting the current logged-in user
+	    // The other data, like reviews will automatically also be deleted (cascade)
+
+		existingUser.setFirstName(null);
+		existingUser.setLastName(null);
+		existingUser.setPhoneNumber(null);
+		existingUser.setEmail(null);
+		existingUser.setPassword(null); // Consider hashing if changed
+		service.update(existingUser);
+
 	    return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
-	}
-	
-	
+	}	
 
 }

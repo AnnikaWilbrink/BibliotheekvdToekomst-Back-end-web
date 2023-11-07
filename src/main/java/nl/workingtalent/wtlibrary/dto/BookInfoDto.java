@@ -22,6 +22,9 @@ public class BookInfoDto {
 	
 	private String edition;
 	
+	private int numberOfAvailableCopies;
+	
+	
 	public long getId() {
 		return id;
 	}
@@ -100,6 +103,14 @@ public class BookInfoDto {
 
 	public void setEdition(String edition) {
 		this.edition = edition;
+	}
+
+	public int getNumberOfAvailableCopies() {
+		return numberOfAvailableCopies;
+	}
+
+	public void setNumberOfAvailableCopies(int numberOfAvailableCopies) {
+		this.numberOfAvailableCopies = numberOfAvailableCopies;
 	}
 	
 	

@@ -185,7 +185,11 @@ public class BookController {
 			return Optional.empty();
 	    }
 		Book book = optional.get();
-
+		
+		// TODO: get the BookAvailabilityDto based on the id.
+		Optional<BookAvailabilityDto> optionalBookAvailabilityDto = Optional.of(findAvailability(id));
+		
+		
 		BookInfoDto dto = new BookInfoDto();
 
 		dto.setId(book.getId());
@@ -198,6 +202,10 @@ public class BookController {
 		dto.setTitle(book.getTitle());
 		dto.setAvailability(book.getAvailability());
 		dto.setEdition(book.getEdition());
+		// Set numberOfAvailableCopies if BookAvailabilityDto is present
+	    optionalBookAvailabilityDto.ifPresent(bookAvailabilityDto -> {
+	        dto.setNumberOfAvailableCopies(bookAvailabilityDto.getNumberOfAvailableCopies());
+	    });
 
 		return Optional.of(dto);
 	}
