@@ -9,6 +9,8 @@ public class BookCopyDto {
     private boolean available;
     
     private long copyNumber;
+    
+    private String archivedDescription;
 
 	public long getId() {
 		return id;
@@ -41,5 +43,13 @@ public class BookCopyDto {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+    
+    public String getArchivedDescription() {
+		return archivedDescription;
+	}
+
+	public void setArchivedDescription(String archivedDescription) {
+		this.archivedDescription = archivedDescription;
+	}
 
 }
