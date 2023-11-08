@@ -76,6 +76,7 @@ public class BookCopyController {
         	dto.setCopyNumber(bookCopy.getCopyNumber());
         	dto.setAvailable(bookCopy.isAvailable());
         	dto.setArchived(bookCopy.isArchived());
+        	dto.setArchivedDescription(bookCopy.getArchivedDescription());
         	dtos.add(dto);
         });
         
@@ -141,11 +142,12 @@ public class BookCopyController {
 	}
 	
 	@PutMapping("bookcopy/archive/{id}")
-	public BookCopyArchiveDto archiveBook(@PathVariable long id) {
+	public BookCopyArchiveDto archiveBook(@PathVariable long id, @RequestBody BookCopyArchiveDto dto) {
 		BookCopyArchiveDto archived = new BookCopyArchiveDto();
-		boolean isArchived = service.archiveBookCopy(id);
+		boolean isArchived = service.archiveBookCopy(id, dto.getArchivedDescription());
 		archived.setArchived(isArchived);
 		archived.setAvailable(isArchived ? false : true);
+	    archived.setArchivedDescription(dto.getArchivedDescription());
 		return archived;
 
 	}
@@ -156,6 +158,7 @@ public class BookCopyController {
 		boolean isArchived = service.unarchiveBookCopy(id);
 		archived.setArchived(isArchived);
 		archived.setAvailable(isArchived ? false : true);
+		archived.setArchivedDescription("ha");
 		return archived;
 
 	}
