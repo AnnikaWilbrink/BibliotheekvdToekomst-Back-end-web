@@ -232,19 +232,19 @@ public class BookController {
 		}).collect(Collectors.toList());
 	}
 
-	@PutMapping("book/average/rating/{id}")
-	public BookAvgRatingDto calAvgRating(@PathVariable long id){
-		Optional<Book> optional = service.findById(id);
-		// if(optional.isEmpty()) {
-		// 	return Optional.empty();
-	    // }
-		Book book = optional.get();
-
-		BookAvgRatingDto avgRating = new BookAvgRatingDto();
-		Double isAvgRating = service.calculateAverageRating(book);
-		avgRating.setAvgRating(isAvgRating);
-		return avgRating;
-	}
+//	@PutMapping("book/average/rating/{id}")
+//	public BookAvgRatingDto calAvgRating(@PathVariable long id){
+//		Optional<Book> optional = service.findById(id);
+//		// if(optional.isEmpty()) {
+//		// 	return Optional.empty();
+//	    // }
+//		Book book = optional.get();
+//
+//		BookAvgRatingDto avgRating = new BookAvgRatingDto();
+//		Double isAvgRating = service.calculateAverageRating(book);
+//		avgRating.setAvgRating(isAvgRating);
+//		return avgRating;
+//	}
 
 	@GetMapping("book/availability/{id}")
 	public BookAvailabilityDto findAvailability(@PathVariable long id) {

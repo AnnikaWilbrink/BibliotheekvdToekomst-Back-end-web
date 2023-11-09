@@ -33,7 +33,7 @@ public class Book {
     @Column(length = 50, nullable = false)
     private String category;
     
-    @Column(length = 300, nullable = true)
+    @Column(length = 1000, nullable = true)
     private String summary;
     
     @Column(length = 50, nullable = false)
@@ -45,8 +45,8 @@ public class Book {
     @Column(nullable = false, columnDefinition = "varchar(50) default 'available'")
     private String availability = "available";
 
-	@Column(nullable = true)
-	private Double avgRating;
+//	@Column(nullable = true)
+//	private Double avgRating;
     
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean archived;
@@ -143,13 +143,13 @@ public class Book {
 		this.availability = availability;
 	}
 
-	public Double getAvgRating() {
-		return avgRating;
-	}
-
-	public void setAvgRating(Double avgRating) {
-		this.avgRating = avgRating;
-	}
+//	public Double getAvgRating() {
+//		return avgRating;
+//	}
+//
+//	public void setAvgRating(Double avgRating) {
+//		this.avgRating = avgRating;
+//	}
 
 	public boolean isArchived() {
 		return archived;
