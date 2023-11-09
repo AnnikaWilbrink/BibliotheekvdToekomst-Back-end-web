@@ -79,7 +79,7 @@ public class BookService {
 		} else {
 			return totalRating / reviews.size();
 		}
-		}
+	}
 
 	public int findNrOfCopies(Book book) {
 		List<BookCopy> bookCopies = book.getBookcopies();

@@ -42,25 +42,29 @@ public class BookSearchRepository {
         	predicates.add(searchWordPredicate);
         }
 
-        // if (isCategory != null && !isCategory.isEmpty()) {
-		// 	List<Predicate> searchCategoryPredicates = new ArrayList<>();
+        if (isCategory != null && !isCategory.isEmpty()) {
+			List<Predicate> searchCategoryPredicates = new ArrayList<>();
 
-		// 	for (String i : isCategory) {
-		// 		Predicate searchCategoryPredicate = cb.equal(book.get("category"), i);
-		// 		searchCategoryPredicates.add(searchCategoryPredicate);
-		// 	}
+			for (String nextCategory : isCategory) {
+				Predicate searchCategoryPredicate = cb.equal(book.get("category"), nextCategory);
+				searchCategoryPredicates.add(searchCategoryPredicate);
+			}
 
-		// 	Predicate categoryPredicates = cb.or(searchCategoryPredicates);
-        // 	predicates.add(categoryPredicates);
+			Predicate categoryPredicates = cb.or(searchCategoryPredicates.toArray(new Predicate[] {}));
+        	predicates.add(categoryPredicates);
 			
-		// }
+		}
 
 		if (hasSubject != null && !hasSubject.isEmpty()) {
-			for (String i : hasSubject) {
-				Predicate searchSubjectPredicate = cb.equal(book.get("subject"), i);
-				predicates.add(searchSubjectPredicate);
+			List<Predicate> searchSubjectPredicates = new ArrayList<>();
+
+			for (String nextSubject : hasSubject) {
+				Predicate searchSubjectPredicate = cb.equal(book.get("subject"), nextSubject);
+				searchSubjectPredicates.add(searchSubjectPredicate);
 			}
-			
+
+			Predicate subjectPredicates = cb.or(searchSubjectPredicates.toArray(new Predicate[] {}));
+			predicates.add(subjectPredicates);
 		}
 
         if (minReviewScore != null) {
@@ -76,8 +80,6 @@ public class BookSearchRepository {
 	        cq.where(finalQuery);
         }
         
-
-		//cq.orderBy(cb.asc(book.get("title")));
 
 		// Sorting logic
 
