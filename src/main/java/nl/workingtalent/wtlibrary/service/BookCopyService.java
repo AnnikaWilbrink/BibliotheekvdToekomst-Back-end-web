@@ -46,12 +46,13 @@ public class BookCopyService {
 		return repository.findByAvailableAndBook(true, book);
 	}
 	
-	public boolean archiveBookCopy(Long bookCopyId) {
+	public boolean archiveBookCopy(Long bookCopyId, String archivedDescription) {
 	    Optional<BookCopy> bookCopyOptional = repository.findById(bookCopyId);
 	    if (bookCopyOptional.isPresent()) {
 	        BookCopy bookCopy = bookCopyOptional.get();
 	        bookCopy.setArchived(true);
 	        bookCopy.setAvailable(false);
+	        bookCopy.setArchivedDescription(archivedDescription);
 	        repository.save(bookCopy);
 	        return true;
 	    }
@@ -64,6 +65,7 @@ public class BookCopyService {
 	        BookCopy bookCopy = bookCopyOptional.get();
 	        bookCopy.setArchived(false);
 	        bookCopy.setAvailable(true);
+	        bookCopy.setArchivedDescription("");
 	        repository.save(bookCopy);
 	        return true;
 	    }

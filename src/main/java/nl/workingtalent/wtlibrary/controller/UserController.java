@@ -26,7 +26,6 @@ import nl.workingtalent.wtlibrary.dto.UserChangePhoneNumberDto;
 import nl.workingtalent.wtlibrary.dto.UserDto;
 import nl.workingtalent.wtlibrary.dto.UserLoginDto;
 import nl.workingtalent.wtlibrary.model.User;
-import nl.workingtalent.wtlibrary.repository.IInvitationTokenRepository;
 import nl.workingtalent.wtlibrary.service.InvitationTokenService;
 import nl.workingtalent.wtlibrary.service.UserService;
 
