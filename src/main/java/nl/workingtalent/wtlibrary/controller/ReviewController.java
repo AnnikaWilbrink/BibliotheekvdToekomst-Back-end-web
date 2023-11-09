@@ -138,7 +138,7 @@ public class ReviewController {
     		Review review = new Review(); 
             
             review.setBook(book);
-           	review.setUser(user);
+            review.setUser(user);
             review.setText(dto.getText());
             review.setStars(dto.getStars());
             

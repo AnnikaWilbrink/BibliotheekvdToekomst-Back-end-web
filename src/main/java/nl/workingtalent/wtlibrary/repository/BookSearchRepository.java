@@ -3,6 +3,7 @@ package nl.workingtalent.wtlibrary.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Expression;
+
 import nl.workingtalent.wtlibrary.model.Book;
 import nl.workingtalent.wtlibrary.model.Review;
 
@@ -23,7 +26,7 @@ public class BookSearchRepository {
 	@Autowired
 	private EntityManager em;
 
-	public List<Book> search(String filterWord, List<String> isCategory, List<String> hasSubject, Integer minReviewScore) {
+	public List<Book> search(String filterWord, List<String> isCategory, List<String> hasSubject, Integer minReviewScore, String sortField, String sortOrder) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Book> cq = cb.createQuery(Book.class);
 
@@ -40,19 +43,28 @@ public class BookSearchRepository {
         }
 
         if (isCategory != null && !isCategory.isEmpty()) {
-			for (String i : isCategory) {
-				Predicate searchCategoryPredicate = cb.equal(book.get("category"), i);
-				predicates.add(searchCategoryPredicate);
+			List<Predicate> searchCategoryPredicates = new ArrayList<>();
+
+			for (String nextCategory : isCategory) {
+				Predicate searchCategoryPredicate = cb.equal(book.get("category"), nextCategory);
+				searchCategoryPredicates.add(searchCategoryPredicate);
 			}
+
+			Predicate categoryPredicates = cb.or(searchCategoryPredicates.toArray(new Predicate[] {}));
+        	predicates.add(categoryPredicates);
 			
 		}
 
 		if (hasSubject != null && !hasSubject.isEmpty()) {
-			for (String i : hasSubject) {
-				Predicate searchSubjectPredicate = cb.equal(book.get("subject"), i);
-				predicates.add(searchSubjectPredicate);
+			List<Predicate> searchSubjectPredicates = new ArrayList<>();
+
+			for (String nextSubject : hasSubject) {
+				Predicate searchSubjectPredicate = cb.equal(book.get("subject"), nextSubject);
+				searchSubjectPredicates.add(searchSubjectPredicate);
 			}
-			
+
+			Predicate subjectPredicates = cb.or(searchSubjectPredicates.toArray(new Predicate[] {}));
+			predicates.add(subjectPredicates);
 		}
 
         if (minReviewScore != null) {
@@ -62,15 +74,27 @@ public class BookSearchRepository {
         	predicates.add(reviewsPredicate);
         }
 
+
         if (!predicates.isEmpty()) {
 	        Predicate finalQuery = cb.and(predicates.toArray(new Predicate[] {}));
 	        cq.where(finalQuery);
         }
-        cq.orderBy(cb.asc(book.get("title")));
+        
+
+		// Sorting logic
+
+		if (sortField != null && sortOrder != null) {
+			if (sortOrder.equalsIgnoreCase("asc")) {
+				cq.orderBy(cb.asc(book.get(sortField)));
+			} else if (sortOrder.equalsIgnoreCase("desc")) {
+				cq.orderBy(cb.desc(book.get(sortField)));
+			}
+		}
 
         TypedQuery<Book> query = em.createQuery(cq);
 
         return query.getResultList();
 	}
+
 
 }
