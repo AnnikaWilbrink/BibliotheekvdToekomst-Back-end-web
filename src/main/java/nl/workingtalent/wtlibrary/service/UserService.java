@@ -137,7 +137,4 @@ public class UserService {
 	    return repository.findByRole(role);
 	}
 	
-	public Optional<User> findByEmail(String email) {
-        return repository.findByEmail(email);
-    }
 }

@@ -157,7 +157,10 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "user/{id}")
-	public boolean delete(@PathVariable long id) {
+	public boolean delete(@PathVariable long id, HttpServletRequest request) {
+		// TODO: check if currentUser is admin, otherwise cannot delete users and admins
+		User currentUser = (User) request.getAttribute("WT_USER");
+		
 		Optional<User> optional = service.findById(id);
 		if (optional.isEmpty()) {
 			return false;
@@ -202,7 +205,6 @@ public class UserController {
 	        // You can customize the token, fullName, role, and id as needed
 	        return new LoginResponseDto(true, superAdmin.getToken(), superAdmin.getFullName(), superAdmin.getRole(), superAdmin.getId());
 	    }
-		
 		
 		
 		if (loginUser.getEmail() == null || loginUser.getEmail().isBlank()) {
@@ -303,10 +305,37 @@ public class UserController {
 	
 	
 	@GetMapping("user/role/{role}")
-	public List<UserDto> findUsersByRole(@PathVariable String role) {
+	public List<UserDto> findUsersByRole(@PathVariable String role, HttpServletRequest request) {
+		User currentUser = (User) request.getAttribute("WT_USER");
+		
+		// Check if the currentUser is not null to avoid NullPointerException
+	    if (currentUser == null) {
+	        // Handle the case where currentUser is null, perhaps throw an exception or return an empty list
+	        return new ArrayList<>(); // or throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found.");
+	    }
+		
+		List<UserDto> dtos = new ArrayList<>();
+		
+		
+		
+		if ("superAdmin@example.com".equals(currentUser.getEmail())) {
+			Iterable<User> usersAdmins = service.findAllUsersByRole("admin");
+			
+			usersAdmins.forEach(user -> {
+		        UserDto dto = new UserDto();
+		        dto.setId(user.getId());
+		        dto.setFirstName(user.getFirstName());
+		        dto.setLastName(user.getLastName());
+		        dto.setRole(user.getRole());
+		        dto.setEmail(user.getEmail());
+		        dto.setPhoneNumber(user.getPhoneNumber());
+
+		        dtos.add(dto);
+		    });
+		}
+		
 	    // Using the service method to fetch users by the given role
 	    Iterable<User> users = service.findAllUsersByRole(role);
-	    List<UserDto> dtos = new ArrayList<>();
 
 	    users.forEach(user -> {
 	        UserDto dto = new UserDto();
