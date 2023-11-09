@@ -80,12 +80,6 @@ public class UserController {
 	
 	@PostMapping("user/save")
 	public ResponseEntity<?> save(@RequestBody SaveUserTokenDto dto) {
-	    // Validate the token and get the role
-	    String role = invitationTokenService.validateToken(dto.getInvitationToken());
-	    if (role == null) {
-	        return new ResponseEntity<>("Invalid or expired token", HttpStatus.BAD_REQUEST);
-	    }
-
 	    User user = new User();
 	    user.setFirstName(dto.getFirstName());
 	    user.setLastName(dto.getLastName());
@@ -93,6 +87,11 @@ public class UserController {
 	        user.setPassword(dto.getPassword()); // Consider hashing before saving
 	    } else {
 	        return new ResponseEntity<>("Password is required", HttpStatus.BAD_REQUEST);
+	    }
+	    // Validate the token and get the role
+	    String role = invitationTokenService.validateToken(dto.getInvitationToken());
+	    if (role == null) {
+	        return new ResponseEntity<>("Invalid or expired token", HttpStatus.BAD_REQUEST);
 	    }
 	    user.setRole(role); // Set the role from the token
 	    user.setEmail(dto.getEmail());
@@ -155,9 +154,9 @@ public class UserController {
 		return true;
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "user/{id}")
+	@RequestMapping(method = RequestMethod.DELETE, value = "user/delete/{id}")
 	public boolean delete(@PathVariable long id, HttpServletRequest request) {
-		// TODO: check if currentUser is admin, otherwise cannot delete users and admins
+		// TODO: check if currentUser is admin or superadmin, otherwise cannot delete users and admins
 		User currentUser = (User) request.getAttribute("WT_USER");
 		
 		Optional<User> optional = service.findById(id);
@@ -165,11 +164,11 @@ public class UserController {
 			return false;
 		}
 		User existingUser = optional.get();
-		existingUser.setFirstName(null);
-		existingUser.setLastName(null);
-		existingUser.setPhoneNumber(null);
-		existingUser.setEmail(null);
-		existingUser.setPassword(null); // Consider hashing if changed
+		existingUser.setFirstName("null");
+		existingUser.setLastName("null");
+		existingUser.setPhoneNumber("null");
+		existingUser.setEmail("null");
+		existingUser.setPassword("null"); // Consider hashing if changed
 		service.update(existingUser);
 		return true;
 	}
@@ -320,24 +319,42 @@ public class UserController {
 		if ("superAdmin@example.com".equals(currentUser.getEmail())) {
 			Iterable<User> usersAdmins = service.findAllUsersByRole("admin");
 			
-			usersAdmins.forEach(user -> {
-		        UserDto dto = new UserDto();
-		        dto.setId(user.getId());
-		        dto.setFirstName(user.getFirstName());
-		        dto.setLastName(user.getLastName());
-		        dto.setRole(user.getRole());
-		        dto.setEmail(user.getEmail());
-		        dto.setPhoneNumber(user.getPhoneNumber());
-
-		        dtos.add(dto);
-		    });
+			 // Remove the user associated with the super_admin_token
+	        for (User user : usersAdmins) {
+	            if (user.getEmail().equals("superAdmin@example.com")) {
+	                // If this user is the one with super_admin_token, don't add to dtos
+	                continue;
+	            }
+	            
+	            if (user.getEmail().equals("null") && user.getFirstName().equals("null") && 
+	            		user.getLastName().equals("null") && user.getPhoneNumber().equals("null")) {
+	            	continue;
+	            }
+	            
+	            UserDto dto = new UserDto();
+	            dto.setId(user.getId());
+	            dto.setFirstName(user.getFirstName());
+	            dto.setLastName(user.getLastName());
+	            dto.setRole(user.getRole());
+	            dto.setEmail(user.getEmail());
+	            dto.setPhoneNumber(user.getPhoneNumber());
+	            
+	            dtos.add(dto);
+	        }
+			
+			
 		}
 		
 	    // Using the service method to fetch users by the given role
 	    Iterable<User> users = service.findAllUsersByRole(role);
 
-	    users.forEach(user -> {
-	        UserDto dto = new UserDto();
+	    for (User user : users) {
+	    	if (user.getEmail().equals("null") && user.getFirstName().equals("null") && 
+            		user.getLastName().equals("null") && user.getPhoneNumber().equals("null")) {
+            	continue;
+            }
+	    	
+	    	UserDto dto = new UserDto();
 	        dto.setId(user.getId());
 	        dto.setFirstName(user.getFirstName());
 	        dto.setLastName(user.getLastName());
@@ -346,7 +363,7 @@ public class UserController {
 	        dto.setPhoneNumber(user.getPhoneNumber());
 
 	        dtos.add(dto);
-	    });
+	    }
 
 	    return dtos;
 	}
