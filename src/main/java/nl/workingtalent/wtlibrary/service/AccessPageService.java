@@ -14,12 +14,27 @@ public class AccessPageService {
     @Autowired
     private IUserRepository repository;
 
-    @Autowired 
-    private UserService service;
-
-    public boolean hasPermissionToAccessPage(String role, String token, long userId) {
+    public User adminHasPermissionToAccessPage(String role, String token, long userId) {
         Optional<User> optional = repository.findByIdAndTokenAndRole(userId, token, role);
-        if (optional.isPresent()) {
+        User user = optional.get();
+        return user;
+        /*
+        if (user.getRole() == "admin"){
+            return true;
+        }
+        else{
+            return false;
+        }
+        */
+    }
+
+    
+
+
+
+    public boolean frontdeskHasPermissionToAccessPage(String role, String token, long userId) {
+        Optional<User> optional = repository.findByIdAndTokenAndRole(userId, token, role);
+        if (optional.isPresent() && (role == "front-desk")) {
 			return true;
 		}
         return false;
