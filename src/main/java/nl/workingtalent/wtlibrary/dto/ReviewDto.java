@@ -4,8 +4,10 @@ public class ReviewDto {
 
     private long id;
     private long bookId;
-    private long userId;
-    private String text;
+	private String bookTitle;
+	private long userId;
+	private String userFirstName;
+	private String text;
     private int stars;
 	public long getId() {
 		return id;
@@ -19,11 +21,23 @@ public class ReviewDto {
 	public void setBookId(long bookId) {
 		this.bookId = bookId;
 	}
+	public String getBookTitle() {
+		return bookTitle;
+	}
+	public void setBookTitle(String bookTitle) {
+		this.bookTitle = bookTitle;
+	}
 	public long getUserId() {
 		return userId;
 	}
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+	public String getUserFirstName() {
+		return userFirstName;
+	}
+	public void setUserFirstName(String userFirstName) {
+		this.userFirstName = userFirstName;
 	}
 	public String getText() {
 		return text;

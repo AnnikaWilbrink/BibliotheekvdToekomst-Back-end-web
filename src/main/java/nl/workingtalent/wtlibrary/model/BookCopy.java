@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class BookCopy {
@@ -13,11 +14,20 @@ public class BookCopy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
-    @Column(length = 15, nullable = false)
-    private String available;
+    @Column
+    private boolean available;
     
-    @Column(nullable = false)
-    private int copyNumber;
+    @Column
+    private long copyNumber;
+    
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean archived;
+    
+    @Column(length = 100, nullable = false)
+    private String archivedDescription = "";
+
+	@ManyToOne
+	private Book book;
 
 	public long getId() {
 		return id;
@@ -27,19 +37,45 @@ public class BookCopy {
 		this.id = id;
 	}
 
-	public String getAvailable() {
-		return available;
-	}
-
-	public void setAvailable(String available) {
-		this.available = available;
-	}
-
-	public int getCopyNumber() {
+	public long getCopyNumber() {
 		return copyNumber;
 	}
 
-	public void setCopyNumber(int copyNumber) {
+	public void setCopyNumber(long copyNumber) {
 		this.copyNumber = copyNumber;
 	}
+
+    public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
+	public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+	public String getArchivedDescription() {
+		return archivedDescription;
+	}
+
+	public void setArchivedDescription(String archivedDescription) {
+		this.archivedDescription = archivedDescription;
+	}
+    
+
 }

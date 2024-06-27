@@ -2,17 +2,11 @@ package nl.workingtalent.wtlibrary.dto;
 
 public class SaveBookCopyDto {
     
-    private String available;
+    private boolean available;
     
     private int copyNumber;
-
-	public String getAvailable() {
-		return available;
-	}
-
-	public void setAvailable(String available) {
-		this.available = available;
-	}
+    
+    private long book;
 
 	public int getCopyNumber() {
 		return copyNumber;
@@ -21,5 +15,23 @@ public class SaveBookCopyDto {
 	public void setCopyNumber(int copyNumber) {
 		this.copyNumber = copyNumber;
 	}
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+	public long getBook() {
+		return book;
+	}
+
+	public void setBook(long book) {
+		this.book = book;
+	}
+    
+    
 
 }

@@ -2,6 +2,8 @@ package nl.workingtalent.wtlibrary.model;
 
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +24,7 @@ public class Book {
     @Column(length = 100, nullable = false)
     private String author;
     
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String isbn;
     
     @Column(length = 50, nullable = false)
@@ -31,7 +33,7 @@ public class Book {
     @Column(length = 50, nullable = false)
     private String category;
     
-    @Column(length = 300, nullable = true)
+    @Column(length = 1000, nullable = true)
     private String summary;
     
     @Column(length = 50, nullable = false)
@@ -40,14 +42,26 @@ public class Book {
     @Column(length = 300, nullable = false)
     private String coverUrl;
     
-    @Column(length = 50, nullable = false)
-    private String availablity;
+    @Column(nullable = false, columnDefinition = "varchar(50) default 'available'")
+    private String availability = "available";
+
+//	@Column(nullable = true)
+//	private Double avgRating;
+    
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean archived;
+    
+    @OneToMany(mappedBy = "book")
+	private List<Reservation> reservations;
+    
+    @OneToMany(mappedBy = "book")
+    private List<Favorite> favorite;
     
     @OneToMany(orphanRemoval = true, mappedBy = "book")
     private List<Review> reviews;
-    
-	@Column(length = 500, nullable = false)
-    private String description;
+
+	@OneToMany(mappedBy = "book")
+	private List<BookCopy> bookcopies;
 
 	public long getId() {
 		return id;
@@ -121,12 +135,44 @@ public class Book {
 		this.coverUrl = coverUrl;
 	}
 
-	public String getAvailablity() {
-		return availablity;
+	public String getAvailability() {
+		return availability;
 	}
 
-	public void setAvailablity(String availablity) {
-		this.availablity = availablity;
+	public void setAvailability(String availability) {
+		this.availability = availability;
+	}
+
+//	public Double getAvgRating() {
+//		return avgRating;
+//	}
+//
+//	public void setAvgRating(Double avgRating) {
+//		this.avgRating = avgRating;
+//	}
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+
+	public List<Favorite> getFavorite() {
+		return favorite;
+	}
+
+	public void setFavorite(List<Favorite> favorite) {
+		this.favorite = favorite;
 	}
 
 	public List<Review> getReviews() {
@@ -137,13 +183,14 @@ public class Book {
 		this.reviews = reviews;
 	}
 
-	public String getDescription() {
-		return description;
+	public List<BookCopy> getBookcopies() {
+		return bookcopies;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setBookcopies(List<BookCopy> bookcopies) {
+		this.bookcopies = bookcopies;
 	}
+
 	
-	
+
 }

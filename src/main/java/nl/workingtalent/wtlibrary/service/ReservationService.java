@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import nl.workingtalent.wtlibrary.model.Reservation;
 import nl.workingtalent.wtlibrary.repository.IReservationRepository;
 
-
 @Service
 public class ReservationService {
 
@@ -25,6 +24,14 @@ public class ReservationService {
 		repository.save(reservation);
 	}
 	
+	public List<Reservation> findAllByUserId(long userId) {
+    	return repository.findByUserId(userId);
+    }
+
+	public Reservation findByUserIdAndBookId(long userId, long bookId) {
+        return repository.findByUserIdAndBookId(userId, bookId);
+    }
+
 	public Optional<Reservation> findById(@PathVariable long id){
 		return repository.findById(id);
 	}
@@ -35,6 +42,10 @@ public class ReservationService {
 	
 	public void update(Reservation reservation) {
 		repository.save(reservation);
+	}
+	
+	public List<Reservation> findAllActiveByUserId(long userId) {
+	    return repository.findByUserIdAndDeletedFalseAndBorrowedFalse(userId);
 	}
 	
 }

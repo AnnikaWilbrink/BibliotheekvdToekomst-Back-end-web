@@ -4,9 +4,13 @@ public class BookCopyDto {
 
     private long id;
     
-    private String available;
+    private boolean archived;
     
-    private int copyNumber;
+    private boolean available;
+    
+    private long copyNumber;
+    
+    private String archivedDescription;
 
 	public long getId() {
 		return id;
@@ -15,21 +19,37 @@ public class BookCopyDto {
 	public void setId(long id) {
 		this.id = id;
 	}
-
-	public String getAvailable() {
-		return available;
+	
+	public boolean isArchived() {
+		return archived;
 	}
 
-	public void setAvailable(String available) {
-		this.available = available;
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 
-	public int getCopyNumber() {
+	public long getCopyNumber() {
 		return copyNumber;
 	}
 
-	public void setCopyNumber(int copyNumber) {
+	public void setCopyNumber(long copyNumber) {
 		this.copyNumber = copyNumber;
+	}
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+    
+    public String getArchivedDescription() {
+		return archivedDescription;
+	}
+
+	public void setArchivedDescription(String archivedDescription) {
+		this.archivedDescription = archivedDescription;
 	}
 
 }

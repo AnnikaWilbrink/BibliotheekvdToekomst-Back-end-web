@@ -17,10 +17,6 @@ public class SaveBookDto {
     private String edition;
     
     private String coverUrl;
-    
-    private String availablity;
-    
-    private String description;
 
 	public String getTitle() {
 		return title;
@@ -84,22 +80,6 @@ public class SaveBookDto {
 
 	public void setCoverUrl(String coverUrl) {
 		this.coverUrl = coverUrl;
-	}
-
-	public String getAvailablity() {
-		return availablity;
-	}
-
-	public void setAvailablity(String availablity) {
-		this.availablity = availablity;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	
 }
